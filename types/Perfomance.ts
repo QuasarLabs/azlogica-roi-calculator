@@ -1,5 +1,3 @@
-
-
 export interface IPerfomanceExpectedResults {
     reduccionTiempoImproductivo: number,
     productividadRRHH: number,

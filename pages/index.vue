@@ -8,9 +8,10 @@ const commonData: ICommonData = reactive({
   assets: null,
   perfomance: null,
   riskManagement: null,
-  inventoryManagement:null,
-  fuelManagement:null,
-  maintenanceOptimization:null
+  inventoryManagement: null,
+  fuelManagement: null,
+  maintenanceOptimization: null,
+  qualityManagement: null,
 });
 const resultData: IResultData = reactive({
   perfomanceResult: null,
@@ -132,12 +133,14 @@ function updateResultData(key: keyof IResultData, obj: ValueOf<IResultData>) {
             :orderPlacementCost="
               commonData?.inventoryManagement?.quantityOrderedProducts
             "
-            :warehouseReduction="commonData?.inventoryManagement?.warehouseReduction"
+            :warehouseReduction="
+              commonData?.inventoryManagement?.warehouseReduction
+            "
           />
         </div>
-      </el-collapse-item> 
+      </el-collapse-item>
       <!-- ШАГ 5 -->
-       <el-collapse-item name="5">
+      <el-collapse-item name="5">
         <template #title>
           <div class="section-step">
             <BaseIcon :icon="`material-symbols:circle`" />
@@ -147,52 +150,62 @@ function updateResultData(key: keyof IResultData, obj: ValueOf<IResultData>) {
         <div class="container">
           <StepFuelMain @update="updateData" />
           <StepFuelExpectedResults @update="updateData" />
-          <StepFuelResult 
-          :consumptionControl="commonData?.fuelManagement?.consumptionControl"
-          :fuelEconomy="commonData?.fuelManagement?.fuelEconomy"
-          :fuelPrice="commonData?.fuelManagement?.fuelPrice" 
-          :habitSavings="commonData?.fuelManagement?.habitSavings" 
-          :routeDistance="commonData?.fuelManagement?.routeDistance"
-          :routeOptimization="commonData?.fuelManagement?.routeOptimization"
-          :controlledAssets="commonData?.assets?.numberControlledAssets" 
-           />
-        </div>
-      </el-collapse-item> 
-      <!-- ШАГ 6 -->
-       <el-collapse-item name="6">
-        <template #title>
-            <div class="section-step">
-              <BaseIcon :icon="`material-symbols:circle`" />
-              <h2 class="step-title">{{ STEP_TITLES[5].name }}</h2>
-            </div>
-        </template>
-        <div class="container">
-          <StepMaintenanceMain  @update="updateData"/>
-          <StepMaintenanceExpectedResults @update="updateData"/>
-          <StepMaintenanceResult
-            :maintenanceCost="commonData?.maintenanceOptimization?.maintenanceCost"
-            :expectedCostReduction="commonData?.maintenanceOptimization?.costReduction"
+          <StepFuelResult
+            :consumptionControl="commonData?.fuelManagement?.consumptionControl"
+            :fuelEconomy="commonData?.fuelManagement?.fuelEconomy"
+            :fuelPrice="commonData?.fuelManagement?.fuelPrice"
+            :habitSavings="commonData?.fuelManagement?.habitSavings"
+            :routeDistance="commonData?.fuelManagement?.routeDistance"
+            :routeOptimization="commonData?.fuelManagement?.routeOptimization"
+            :controlledAssets="commonData?.assets?.numberControlledAssets"
           />
         </div>
-      </el-collapse-item>  
-      <!-- ШАГ 7 -->
-      <!-- <el-collapse-item name="7">
+      </el-collapse-item>
+      <!-- ШАГ 6 -->
+      <el-collapse-item name="6">
         <template #title>
-            <div class="section-step">
-              <BaseIcon :icon="`material-symbols:circle`" />
-              <h2 class="step-title">{{STEP_TITLES[6].name}}</h2>
+          <div class="section-step">
+            <BaseIcon :icon="`material-symbols:circle`" />
+            <h2 class="step-title">{{ STEP_TITLES[5].name }}</h2>
           </div>
         </template>
-          <StepQualityMain @update="updateData"/>
-          <StepQualityExpectedResults  @update="updateData"/>
-          <StepQualityResult
-          @updateResultData="updateResultData"
-          :defectiveProductCount="commonData?.quality?.nonConformingProducts"
-          :productCommercialValue="commonData?.quality?.productValue"
-          :reductionPercentage="commonData?.quality?.nonConformingProductReduction"
-          :maintenanceCost="commonData?.maintenanceOptimization?.maintenanceCost"     
+        <div class="container">
+          <StepMaintenanceMain @update="updateData" />
+          <StepMaintenanceExpectedResults @update="updateData" />
+          <StepMaintenanceResult
+            :maintenanceCost="
+              commonData?.maintenanceOptimization?.maintenanceCost
+            "
+            :expectedCostReduction="
+              commonData?.maintenanceOptimization?.costReduction
+            "
           />
-      </el-collapse-item> -->
+        </div>
+      </el-collapse-item>
+      <!-- ШАГ 7 -->
+      <el-collapse-item name="7">
+        <template #title>
+          <div class="section-step">
+            <BaseIcon :icon="`material-symbols:circle`" />
+            <h2 class="step-title">{{ STEP_TITLES[6].name }}</h2>
+          </div>
+        </template>
+        <StepQualityMain @update="updateData" />
+        <StepQualityExpectedResults @update="updateData" />
+        <StepQualityResult
+          @updateResultData="updateResultData"
+          :defectiveProductCount="
+            commonData?.qualityManagement?.nonConformingProducts
+          "
+          :productCommercialValue="commonData?.qualityManagement?.productValue"
+          :reductionPercentage="
+            commonData?.qualityManagement?.nonConformingProductReduction
+          "
+          :maintenanceCost="
+            commonData?.maintenanceOptimization?.maintenanceCost
+          "
+        />
+      </el-collapse-item>
     </el-collapse>
     <!-- <TheCalculatorResult/> -->
   </div>

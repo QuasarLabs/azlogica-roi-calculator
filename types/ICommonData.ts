@@ -2,6 +2,7 @@ import type { IFuelManagement, IFuelManagementExpectedResults } from './FuelMana
 import type { IInventoryManagement, IInventoryManagementExpectedResults } from './inventoryManagement';
 import type {IRiskManagement,IRiskManagementExpectedResults} from './IRiskManagement'
 import type { IMaintenance, IMaintenanceExpectedResults } from './Maintenance';
+import type { IQualityManagement, IQualityManagementExpectedResults } from './QualityManagement';
 export default interface ICommonData {
   assets: {
     radio: boolean;
@@ -27,4 +28,5 @@ export default interface ICommonData {
   inventoryManagement: (IInventoryManagement & IInventoryManagementExpectedResults) | null;
   fuelManagement: (IFuelManagement & IFuelManagementExpectedResults) | null;
   maintenanceOptimization:(IMaintenance & IMaintenanceExpectedResults) | null;
+  qualityManagement:(IQualityManagement & IQualityManagementExpectedResults) | null;
 }
