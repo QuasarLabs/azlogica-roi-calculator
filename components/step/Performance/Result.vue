@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed, defineProps, watch } from "vue";
 
 const emit = defineEmits(["updateResultData"]);
 
@@ -107,6 +106,8 @@ watch(
       monthlyProductionCosts: newResult1,
       monthlyProductionSavings: newResult2,
     });
+  },{
+    immediate:true
   }
 );
 </script>

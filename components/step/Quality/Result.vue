@@ -9,7 +9,7 @@ const props = defineProps({
     type: Number,
     default: 0, // Коммерческая ценность продукции
   },
-  maintenanceCost: {
+  monthlyMaintenanceCosts: {
     type: Number,
     default: 0, // Ежемесячные расходы на обслуживание
   },
@@ -27,37 +27,27 @@ const monthlyDefectiveProductCost = computed(() => {
     props.defectiveProductCount >= 0 &&
     props.productCommercialValue >= 0
   ) {
-    return `$ ${props.defectiveProductCount * props.productCommercialValue}`;
+    return props.defectiveProductCount * props.productCommercialValue
   }
-  return "$ Datos insuficientes";
 });
 
 // Вычисление общих расходов на обслуживание
 const totalMaintenanceCost = computed(() => {
-  if (
-    typeof props.maintenanceCost === "number" &&
-    typeof props.reductionPercentage === "number" &&
-    props.maintenanceCost >= 0 &&
-    props.reductionPercentage >= 0 &&
-    props.reductionPercentage <= 100
-  ) {
-    const reduction = props.maintenanceCost * (props.reductionPercentage / 100);
-    return `$ ${props.maintenanceCost - reduction}`;
-  }
-  return "$ Datos insuficientes";
+    const reduction = props.monthlyMaintenanceCosts * (props.reductionPercentage / 100);
+    return props.monthlyMaintenanceCosts - reduction;
 });
 const emit = defineEmits(["updateResultData"]); // Объявляем событие
 
 // Следим за изменением результатов и эмитим событие
 watch(
-  [monthlyDefectiveProductCost.value, totalMaintenanceCost],
+  [monthlyDefectiveProductCost, totalMaintenanceCost],
   ([newMonthlyCost, newTotalCost]) => {
-    emit("updateResultData", {
-      resultQuality: {
+    emit("updateResultData","qualityResult", {
         monthlyDefectiveProductCost: newMonthlyCost,
         totalMaintenanceCost: newTotalCost,
-      },
     });
+  },{
+    immediate:true
   }
 );
 </script>

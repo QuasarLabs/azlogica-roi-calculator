@@ -1,0 +1,384 @@
+@import "./_reset.scss";
+@import "./_common.scss";
+@import "./_vars.scss";
+@import "./element-ui";
+.container {
+  width: 100%;
+  max-width: 1172px;
+  margin: 0 auto;
+  padding: 0 16px;
+  @media screen and (min-width: $xxxl) {
+    max-width: 1200px;
+  }
+}
+
+@font-face {
+  font-weight: 400;
+  font-family: "Helvetica";
+  font-style: normal;
+  src: url("../../public/fonts/HelveticaNeueRoman.woff2") format("woff2");
+  font-display: swap;
+}
+@font-face {
+  font-weight: 500;
+  font-family: "Helvetica";
+  font-style: normal;
+  src: url("../../public/fonts/HelveticaNeueMedium.woff2") format("woff2");
+  font-display: swap;
+}
+
+html {
+  height: 100%;
+  overflow-x: hidden;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100%;
+  overflow: hidden;
+  color: $white;
+  font-size: 16px;
+  font-family: "Helvetica";
+  line-height: 100%;
+  background-color: $darkPrimary;
+  ::selection {
+    color: $white;
+    // background-color: $purple;
+  }
+  @media screen and (min-width: $xxxxl) {
+    font-size: 24px;
+  }
+}
+main {
+  flex: 1 1 auto;
+}
+#__nuxt {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+/* заголовки для шагов */
+.step-title {
+  font-size: 18px;
+  line-height: 130%;
+}
+
+/* заголовки для вопросов */
+.subtitle {
+  font-size: 18px;
+  line-height: 130%;
+  // margin-bottom: 12px;
+  // @media screen and (min-width: $lg) {
+  //   font-size: 24px;
+  //   line-height: 110%;
+  // }
+  // @media screen and (min-width: $xxxxl) {
+  //   font-size: 34px;
+  // }
+}
+/* ОСНОВНЫЕ ЗАГОЛОВКИ */
+.title_large {
+  font-weight: 500;
+  font-size: 55px;
+  line-height: 100%;
+  letter-spacing: -4px;
+}
+
+.title {
+  font-weight: 500;
+  font-size: 54px;
+  font-family: "Space Grotesk";
+  line-height: 109%;
+
+  @media screen and (min-width: $md) {
+    font-size: 60px;
+  }
+  @media screen and (min-width: $lg) {
+    font-size: 90px;
+  }
+  @media screen and (min-width: $xl) {
+    font-size: 100px;
+  }
+  @media screen and (min-width: $xxxxl) {
+    font-size: 120px;
+    letter-spacing: -2px;
+  }
+}
+
+.case-title {
+  font-weight: 500;
+  font-size: 42px;
+  font-family: "Helvetica";
+  line-height: 110%;
+
+  @media screen and (min-width: $md) {
+    font-size: 68px;
+  }
+  @media screen and (min-width: $lg) {
+    font-size: 75px;
+  }
+}
+.case-section-title {
+  font-weight: 500;
+  font-size: 49px;
+  font-family: "Helvetica";
+  line-height: 110%;
+  @media screen and (min-width: $md) {
+    font-size: 54px;
+  }
+}
+
+.section-padding {
+  padding: 40px 0;
+  @media screen and (min-width: $md) {
+    padding: 60px 0;
+  }
+  @media screen and (min-width: $lg) {
+    padding: 80px 0;
+  }
+  @media screen and (min-width: $xxxxl) {
+    padding: 120px 0;
+  }
+}
+
+.page-spacing {
+  padding: 24px 0;
+}
+
+.bold-text {
+  font-weight: 500;
+  font-size: 26px;
+  font-family: "Helvetica";
+  line-height: 110%;
+
+  @media screen and (min-width: $xxxxl) {
+    font-size: 30px;
+  }
+}
+.link-underline {
+  position: relative;
+
+  &::before {
+    position: absolute;
+    right: 0;
+    bottom: -2px;
+    left: 50%;
+    width: 0;
+    height: 0.6px;
+    // background-color: $white;
+    transition: width $transitionDuration, left $transitionDuration;
+    content: "";
+  }
+  &:hover {
+    &::before {
+      left: 0;
+      width: 100%;
+    }
+  }
+}
+.small-text {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 96%;
+  @media screen and (min-width: $sm) {
+    font-size: 15px;
+    line-height: 110%;
+  }
+  @media screen and (min-width: $xxxxl) {
+    font-size: 18px;
+    line-height: 110%;
+  }
+}
+
+.text_base {
+  font-size: 16px;
+  font-family: "Helvetica";
+  line-height: 130%;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+}
+
+._no-draggable {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+._no-scroll {
+  overflow: hidden !important;
+  -ms-touch-action: none;
+  touch-action: none;
+}
+.page-top-spacing {
+  padding-top: 60px;
+  @media screen and (min-width: $xxxxl) {
+    padding-top: 120px;
+  }
+}
+
+._no-draggable {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+._no-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+._sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  border-width: 0;
+  clip: rect(0, 0, 0, 0);
+}
+
+.section-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  // margin-bottom: 24px;
+  color: $yellow;
+  svg {
+    transition: $transitionDuration color;
+  }
+  // &:hover {
+  //   svg {
+  //     color: red !important;
+  //   }
+  // }
+}
+.result {
+  padding: 8px;
+  background: $yellow;
+  border-radius: 4px;
+  .result-box {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    @media screen and (min-width: $sm) {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    @media screen and (min-width: $lg) {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 34px;
+    }
+  }
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.expected-results {
+  margin-bottom: 16px;
+  padding-top: 16px;
+  &__box {
+    background-color: $result_bg;
+    text-align: center;
+    margin-bottom: 12px;
+    border-radius: 4px;
+    padding: 4px 0;
+  }
+  &__list {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    gap: 24px;
+    @media screen and (min-width: $sm) {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      row-gap: 24px;
+      column-gap: 50px;
+    }
+  }
+  &__item {
+    display: flex;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+
+    @media screen and (min-width: $lg) {
+      align-items: center;
+      flex-direction: row;
+    }
+  }
+}
+
+
+.calculator-results{
+  &__inner{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  &__info{
+    display: flex;
+    flex-direction: column;
+    row-gap: 24px;
+  }
+  &__box{
+    display: flex;
+    flex-direction: column;
+    @media screen and (min-width: $lg) {
+      flex-direction: row;
+      row-gap: 24px;
+      column-gap: 50px;
+      justify-content: space-between;
+    }
+  }
+  &__top{
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 24px;
+  }
+  &__footer{
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 24px; 
+    padding: 8px;
+    background: $yellow;
+    border-radius: 4px;
+  }
+}
+
+.roi{
+  font-size: 54px;
+
+}

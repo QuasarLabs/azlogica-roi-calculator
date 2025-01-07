@@ -10,7 +10,7 @@ const values: { [key: string]: any } = reactive({
   radio: true,
   type: null,
   answer: "",
-  num: 0,
+  numberControlledAssets: 0,
 });
 
 // Вопросы, зависящие от выбранного типа
@@ -18,7 +18,7 @@ const question = computed(() => {
   if (values.type) {
     switch (values.type) {
       case 1:
-        return "¿Qué tipo de activos fijos desea controlar?";
+        return "¿Qué tipo de activos estacionarios desea controlar?";
       case 2:
         return "¿Qué tipo de activos móviles desea gestionar?";
       case 3:
@@ -48,6 +48,19 @@ const assetCountQuestion = computed(() => {
 function change() {
   emit("update", "assets", values);
 }
+
+watch(
+  () => values,
+  (newValues) => {
+    emit("update", "assets", newValues); 
+  },
+  {
+    immediate: true,
+    deep: true, 
+    once:true,
+  }
+);
+
 </script>
 
 <template>
@@ -88,7 +101,7 @@ function change() {
         </li>
         <li class="step-one__item">
           <span class="subtitle">{{ assetCountQuestion }}</span>
-          <el-input-number @change="change" v-model="values.num" :min="0" size="large" />
+          <el-input-number @change="change" v-model="values.numberControlledAssets" :min="1" size="large" />
         </li>
       </template>
     </ol>

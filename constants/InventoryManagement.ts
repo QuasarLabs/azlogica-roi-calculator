@@ -40,7 +40,7 @@ export const INVENTORY_MANAGEMENT_CONST = [
       title: "Costo de mantenimiento de producto", // Стоимость обслуживания продукта
       desc:'Costo de mantener un producto en inventario.teniendo en cuenta riesgos y costos de bodega ',
       content: "el-input-number",
-      model: "maintenanceCost",
+      model: "productMaintenanceCost",
       props: {
         min: 0,
         size: "large",

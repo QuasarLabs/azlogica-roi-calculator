@@ -56,10 +56,12 @@ const emit = defineEmits(["updateResultData"]);
 watch(
   [monthlyInventoryCost, monthlyInventorySavings],
   ([newResult1, newResult2]) => {
-    emit("updateResultData", "inventoryManagement", {
-      monthlyProductionCosts: newResult1,
-      monthlyProductionSavings: newResult2,
+    emit("updateResultData", "inventoryResult", {
+      monthlyInventoryCost: newResult1,
+      monthlyInventorySavings: newResult2,
     });
+  },{
+    immediate:true
   }
 );
 </script>

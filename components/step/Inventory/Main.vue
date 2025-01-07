@@ -7,7 +7,7 @@ const values: IInventoryManagement = reactive({
   monthlyDemand: 0,
   averageCost: 0,
   averageOrderSize: 0,
-  maintenanceCost: 0,
+  productMaintenanceCost: 0,
   quantityOrderedProducts:0,
 });
 

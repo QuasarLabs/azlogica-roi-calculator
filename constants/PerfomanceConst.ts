@@ -1,7 +1,7 @@
 export const PERFOMANCE_CONST = [
   {
     id:1,
-    title: "Número de horas en un día laboral",
+    title: "Cantidad de horas en jornada laboral",
     content: "el-input-number",
     model: "laborHours",
     props: {
@@ -12,40 +12,8 @@ export const PERFOMANCE_CONST = [
     },
   },
   {
-    id:2,
-    title: "Tiempo de inactividad por día",
-    content: "el-input-number",
-    model: "dailyDowntime",
-    props: {
-      min: 0.0,
-      max: 24.0,
-      step: 0.01,
-      size: "large",
-    },
-  },
-  {
-    id:3,
-    title: "Número de trabajadores",
-    content: "el-input-number",
-    model: "workerCount",
-    props: {
-      min: 0,
-      size: "large",
-    },
-  },
-  {
-    id:4,
-    title: "Suma de salarios",
-    content: "el-input-number",
-    model: "payrollValue",
-    props: {
-      min: 0,
-      size: "large",
-    },
-  },
-  {
     id:5,
-    title: "% de personal productivo",
+    title: "% de RRHH productivo", 
     content: "el-input-number",
     model: "productiveHRPercentage",
     props: {
@@ -56,8 +24,20 @@ export const PERFOMANCE_CONST = [
     },
   },
   {
+    id:2,
+    title: "Tiempo muerto diario", // Время простоя в день
+    content: "el-input-number",
+    model: "dailyDowntime",
+    props: {
+      min: 0.0,
+      max: 24.0,
+      step: 0.1,
+      size: "large",
+    },
+  },
+  {
     id:6,
-    title: "Costo mensual de energía",
+    title: "Costo de energía mensual",
     content: "el-input-number",
     model: "monthlyEnergyCost",
     props: {
@@ -66,8 +46,18 @@ export const PERFOMANCE_CONST = [
     },
   },
   {
+    id:3,
+    title: "Cantidad de trabajadores",
+    content: "el-input-number",
+    model: "workerCount",
+    props: {
+      min: 0,
+      size: "large",
+    },
+  },
+  {
     id:7,
-    title: "Ingreso mensual",
+    title: "Ingresos mensuales",
     content: "el-input-number",
     model: "monthlyIncome",
     props: {
@@ -75,9 +65,21 @@ export const PERFOMANCE_CONST = [
       size: "large",
     },
   },
+
+  {
+    id:4,
+    title: "Valor de la nómina",
+    content: "el-input-number",
+    model: "payrollValue",
+    props: {
+      min: 0,
+      size: "large",
+    },
+  },
+
   {
     id:8,
-    title: "Costo mensual de paradas de maquinaria",
+    title: "Costo de paradas de maquinaria mensuales",
     content: "el-input-number",
     model: "monthlyMachineStopCost",
     props: {
@@ -85,6 +87,7 @@ export const PERFOMANCE_CONST = [
       size: "large",
     },
   },
+  
 ];
 
 export const PERFOMANCE_EXPECTED_CONST = [

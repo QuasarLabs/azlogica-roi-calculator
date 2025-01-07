@@ -61,6 +61,23 @@ const monthlyRiskSavings = computed(() => {
     ? totalSavings.toFixed(2)
     : "Datos insuficientes";
 });
+
+
+const emit = defineEmits(["updateResultData"]);
+
+// Следим за изменением результатов и эмитим событие
+watch(
+  [monthlyRiskCosts, monthlyRiskSavings],
+  ([newResult1, newResult2]) => {
+    emit("updateResultData", "riskManagementResult", {
+      monthlyRiskCosts: newResult1,
+      monthlyRiskSavings: newResult2,
+    });
+  },{
+    immediate:true
+  }
+);
+
 </script>
 
 <template>

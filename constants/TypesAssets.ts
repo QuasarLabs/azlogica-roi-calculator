@@ -1,7 +1,7 @@
 export const TYPES_ASSETS = [
     {
         id:1,
-        name: 'Activos fijos',  // Стационарные активы
+        name: 'Activos estacionarios',  // Стационарные активы
         value:1,
     },
     {

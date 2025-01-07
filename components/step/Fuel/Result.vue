@@ -55,6 +55,21 @@ const calculatedFuelSavings = computed(() => {
 
   return totalSavings.toFixed(2);
 });
+const emit = defineEmits(["updateResultData"]);
+
+// Следим за изменением результатов и эмитим событие
+watch(
+  [calculatedFuelCost, calculatedFuelSavings],
+  ([newResult1, newResult2]) => {
+    emit("updateResultData", "fuelResult", {
+      fuelCost: newResult1,
+      fuelSavings: newResult2,
+    });
+  },{
+    immediate:true
+  }
+);
+
 </script>
 
 <template>

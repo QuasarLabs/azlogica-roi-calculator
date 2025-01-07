@@ -3,7 +3,6 @@ import type { ValueOf } from "element-plus/es/components/table/src/table-column/
 import { STEP_TITLES } from "~/constants/StepTitles";
 import type ICommonData from "~/types/ICommonData";
 import type IResultData from "~/types/IResultData";
-const activeNames = ref(["1"]);
 const commonData: ICommonData = reactive({
   assets: null,
   perfomance: null,
@@ -15,9 +14,14 @@ const commonData: ICommonData = reactive({
 });
 const resultData: IResultData = reactive({
   perfomanceResult: null,
+  riskManagementResult:null,
+  inventoryResult:null,
+  fuelResult:null,
+  qualityResult:null,
+  maintenanceResult:null
 });
 function updateData(key: keyof ICommonData, newValue: ValueOf<ICommonData>) {
-  if (commonData[key]) {
+  if (commonData[key] && commonData[key] !== null) {
     Object.assign(commonData, { [key]: { ...commonData[key], ...newValue } });
   } else {
     Object.assign(commonData, { [key]: newValue });
@@ -27,15 +31,20 @@ function updateData(key: keyof ICommonData, newValue: ValueOf<ICommonData>) {
 function updateResultData(key: keyof IResultData, obj: ValueOf<IResultData>) {
   resultData[key] = obj;
 }
+
+
+
+const activeNames = ref(['1'])
+
 </script>
 
 <template>
   <div class="container">
-    commonData = {{ commonData }}
+    <!-- commonData = {{ commonData }}
     <br />
     <br />
     <br />
-    resultData = {{ resultData }}
+    resultData = {{ resultData }} -->
     <el-collapse v-model="activeNames">
       <!-- ШАГ 1 -->
       <el-collapse-item class="" name="1">
@@ -94,6 +103,7 @@ function updateResultData(key: keyof IResultData, obj: ValueOf<IResultData>) {
           <StepRiskManagementMain @update="updateData" />
           <StepRiskManagementExpectedResults @update="updateData" />
           <StepRiskManagementResult
+            @updateResultData="updateResultData"
             :stolenAssetsPerMonth="
               commonData?.riskManagement?.stolenAssetsPerMonth
             "
@@ -124,12 +134,13 @@ function updateResultData(key: keyof IResultData, obj: ValueOf<IResultData>) {
           <StepInventoryMain @update="updateData" />
           <StepInventoryExpectedResults @update="updateData" />
           <StepInventoryResult
+            @updateResultData="updateResultData"
             :monthlyDemand="commonData?.inventoryManagement?.monthlyDemand"
             :averageCost="commonData?.inventoryManagement?.averageCost"
             :averageOrderSize="
               commonData?.inventoryManagement?.averageOrderSize
             "
-            :maintenanceCost="commonData?.inventoryManagement?.maintenanceCost"
+            :maintenanceCost="commonData?.inventoryManagement?.productMaintenanceCost"
             :orderPlacementCost="
               commonData?.inventoryManagement?.quantityOrderedProducts
             "
@@ -151,6 +162,7 @@ function updateResultData(key: keyof IResultData, obj: ValueOf<IResultData>) {
           <StepFuelMain @update="updateData" />
           <StepFuelExpectedResults @update="updateData" />
           <StepFuelResult
+            @updateResultData="updateResultData"
             :consumptionControl="commonData?.fuelManagement?.consumptionControl"
             :fuelEconomy="commonData?.fuelManagement?.fuelEconomy"
             :fuelPrice="commonData?.fuelManagement?.fuelPrice"
@@ -207,6 +219,14 @@ function updateResultData(key: keyof IResultData, obj: ValueOf<IResultData>) {
         />
       </el-collapse-item>
     </el-collapse>
-    <!-- <TheCalculatorResult/> -->
+    <TheCalculatorResult
+    :monthlyProductivitySavings="resultData.perfomanceResult?.monthlyProductionSavings"
+    :monthlyRiskSavings="resultData.riskManagementResult?.monthlyRiskSavings"
+    :monthlyInventorySavings="resultData.inventoryResult?.monthlyInventoryCost"
+    :totalFuelSavings="resultData.fuelResult?.fuelSavings"
+    :maintenanceSavings="resultData.qualityResult?.totalMaintenanceCost"
+    :maintenanceCosts="resultData.maintenanceResult?.savingsOnMaintenance"
+    :assetsToControl="commonData.assets?.numberControlledAssets"
+    />
   </div>
 </template>
