@@ -1,23 +1,39 @@
 <script lang="ts" setup>
+import type { ValueOf } from "element-plus/es/components/table/src/table-column/defaults.mjs";
 import { STEP_TITLES } from "~/constants/StepTitles";
+import type ICommonData from "~/types/ICommonData";
+import type IResultData from "~/types/IResultData";
 const activeNames = ref(["1"]);
-const commonData = reactive({});
-const resultData = reactive({});
-function updateData(key: string, newValue: any) {
-  console.log(`updateData`, key, newValue);
-  commonData[key] = { ...commonData[key], ...newValue };
+const commonData: ICommonData = reactive({
+  assets: null,
+  perfomance: null,
+  riskManagement: null,
+  inventoryManagement:null,
+  fuelManagement:null,
+  maintenanceOptimization:null
+});
+const resultData: IResultData = reactive({
+  perfomanceResult: null,
+});
+function updateData(key: keyof ICommonData, newValue: ValueOf<ICommonData>) {
+  if (commonData[key]) {
+    Object.assign(commonData, { [key]: { ...commonData[key], ...newValue } });
+  } else {
+    Object.assign(commonData, { [key]: newValue });
+  }
 }
 
-function updateResultData(key: string, obj: object){
-  console.log(`updateResultData`, key, obj);
-  resultData[key] = obj
+function updateResultData(key: keyof IResultData, obj: ValueOf<IResultData>) {
+  resultData[key] = obj;
 }
 </script>
 
 <template>
   <div class="container">
     commonData = {{ commonData }}
-    <br/>
+    <br />
+    <br />
+    <br />
     resultData = {{ resultData }}
     <el-collapse v-model="activeNames">
       <!-- ШАГ 1 -->
@@ -31,7 +47,7 @@ function updateResultData(key: string, obj: object){
         <StepManagementMain @update="updateData" />
       </el-collapse-item>
       <!-- ШАГ 2 -->
-      <!-- <el-collapse-item name="2">
+      <el-collapse-item name="2">
         <template #title>
           <div class="section-step">
             <BaseIcon :icon="`material-symbols:circle`" />
@@ -64,9 +80,9 @@ function updateResultData(key: string, obj: object){
             "
           />
         </div>
-      </el-collapse-item> -->
+      </el-collapse-item>
       <!-- ШАГ 3 -->
-      <!-- <el-collapse-item name="3">
+      <el-collapse-item name="3">
         <template #title>
           <div class="section-step">
             <BaseIcon :icon="`material-symbols:circle`" />
@@ -94,9 +110,9 @@ function updateResultData(key: string, obj: object){
             :stopReductionPercentage="commonData?.riskManagement?.stopReduction"
           />
         </div>
-      </el-collapse-item> -->
+      </el-collapse-item>
       <!-- ШАГ 4 -->
-      <!-- <el-collapse-item name="4">
+      <el-collapse-item name="4">
         <template #title>
           <div class="section-step">
             <BaseIcon :icon="`material-symbols:circle`" />
@@ -114,16 +130,14 @@ function updateResultData(key: string, obj: object){
             "
             :maintenanceCost="commonData?.inventoryManagement?.maintenanceCost"
             :orderPlacementCost="
-              commonData?.inventoryManagement?.orderPlacementCost
+              commonData?.inventoryManagement?.quantityOrderedProducts
             "
-            :warehouseReduction="
-              commonData?.inventoryManagement?.warehouseReduction
-            "
+            :warehouseReduction="commonData?.inventoryManagement?.warehouseReduction"
           />
         </div>
-      </el-collapse-item> -->
+      </el-collapse-item> 
       <!-- ШАГ 5 -->
-      <!-- <el-collapse-item name="5">
+       <el-collapse-item name="5">
         <template #title>
           <div class="section-step">
             <BaseIcon :icon="`material-symbols:circle`" />
@@ -140,13 +154,12 @@ function updateResultData(key: string, obj: object){
           :habitSavings="commonData?.fuelManagement?.habitSavings" 
           :routeDistance="commonData?.fuelManagement?.routeDistance"
           :routeOptimization="commonData?.fuelManagement?.routeOptimization"
-          :controlledAssets="commonData?.assets?.num" 
-
+          :controlledAssets="commonData?.assets?.numberControlledAssets" 
            />
         </div>
-      </el-collapse-item> -->
+      </el-collapse-item> 
       <!-- ШАГ 6 -->
-      <!-- <el-collapse-item name="6">
+       <el-collapse-item name="6">
         <template #title>
             <div class="section-step">
               <BaseIcon :icon="`material-symbols:circle`" />
@@ -161,7 +174,7 @@ function updateResultData(key: string, obj: object){
             :expectedCostReduction="commonData?.maintenanceOptimization?.costReduction"
           />
         </div>
-      </el-collapse-item>  -->
+      </el-collapse-item>  
       <!-- ШАГ 7 -->
       <!-- <el-collapse-item name="7">
         <template #title>
