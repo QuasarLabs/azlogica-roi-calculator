@@ -1,3 +1,5 @@
+import type { IInventoryManagement, IinventoryManagementExpectedResults } from './inventoryManagement';
+import type {IRiskManagement,IRiskManagementExpectedResults} from './IRiskManagement'
 export default interface ICommonData {
   assets: {
     radio: boolean;
@@ -19,4 +21,6 @@ export default interface ICommonData {
     reduccionCostosEnergia: number;
     reduccionParadas: number;
   } | null;
+  riskManagement: (IRiskManagement & IRiskManagementExpectedResults) | null;
+  inventoryManagement: (IInventoryManagement & IinventoryManagementExpectedResults) | null;
 }
