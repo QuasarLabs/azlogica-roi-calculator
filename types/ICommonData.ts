@@ -1,4 +1,5 @@
-import type { IInventoryManagement, IinventoryManagementExpectedResults } from './inventoryManagement';
+import type { IFuelManagement, IFuelManagementExpectedResults } from './FuelManagement';
+import type { IInventoryManagement, IInventoryManagementExpectedResults } from './inventoryManagement';
 import type {IRiskManagement,IRiskManagementExpectedResults} from './IRiskManagement'
 export default interface ICommonData {
   assets: {
@@ -22,5 +23,6 @@ export default interface ICommonData {
     reduccionParadas: number;
   } | null;
   riskManagement: (IRiskManagement & IRiskManagementExpectedResults) | null;
-  inventoryManagement: (IInventoryManagement & IinventoryManagementExpectedResults) | null;
+  inventoryManagement: (IInventoryManagement & IInventoryManagementExpectedResults) | null;
+  fuelManagement: (IFuelManagement & IFuelManagementExpectedResults) | null;
 }
