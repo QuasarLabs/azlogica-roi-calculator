@@ -14,11 +14,11 @@ const commonData: ICommonData = reactive({
 });
 const resultData: IResultData = reactive({
   perfomanceResult: null,
-  riskManagementResult:null,
-  inventoryResult:null,
-  fuelResult:null,
-  qualityResult:null,
-  maintenanceResult:null
+  riskManagementResult: null,
+  inventoryResult: null,
+  fuelResult: null,
+  qualityResult: null,
+  maintenanceResult: null,
 });
 function updateData(key: keyof ICommonData, newValue: ValueOf<ICommonData>) {
   if (commonData[key] && commonData[key] !== null) {
@@ -32,19 +32,11 @@ function updateResultData(key: keyof IResultData, obj: ValueOf<IResultData>) {
   resultData[key] = obj;
 }
 
-
-
-const activeNames = ref(['1'])
-
+const activeNames = ref(["1"]);
 </script>
 
 <template>
   <div class="container">
-    <!-- commonData = {{ commonData }}
-    <br />
-    <br />
-    <br />
-    resultData = {{ resultData }} -->
     <el-collapse v-model="activeNames">
       <!-- ШАГ 1 -->
       <el-collapse-item class="" name="1">
@@ -74,19 +66,21 @@ const activeNames = ref(['1'])
             :dailyDowntime="commonData?.perfomance?.dailyDowntime"
             :payrollValue="commonData?.perfomance?.payrollValue"
             :workerCount="commonData?.perfomance?.workerCount"
-            :productiveHRPercentage="
-              commonData?.perfomance?.productiveHRPercentage
-            "
             :monthlyEnergyCost="commonData?.perfomance?.monthlyEnergyCost"
             :monthlyMachineStopCost="
               commonData?.perfomance?.monthlyMachineStopCost
             "
-            :expectedDowntimeReduction="
-              commonData?.perfomance?.reduccionTiempoImproductivo
+            :percentageReductionExpectedStops="
+              commonData?.perfomance?.reducingExpectedDowntime
             "
-            :expectedStopReduction="commonData?.perfomance?.reduccionParadas"
-            :expectedEnergyCostReduction="
-              commonData?.perfomance?.reduccionCostosEnergia
+            :expectedPercentageReductionEnergyCosts="
+              commonData?.perfomance?.expectedReductioEnergyCosts
+            "
+            :expectedProductividadRRHH="
+              commonData?.perfomance?.expectedProductividadRRHH
+            "
+            :percentageProductiveStaff="
+              commonData?.perfomance?.productiveHRPercentage
             "
           />
         </div>
@@ -109,16 +103,22 @@ const activeNames = ref(['1'])
             "
             :assetValue="commonData?.riskManagement?.assetValue"
             :accidentCost="commonData?.riskManagement?.accidentCosts"
+            :accidentCosts="commonData?.riskManagement?.accidentCosts"
             :annualInsurancePremium="
               commonData?.riskManagement?.annualInsurancePremium
             "
-            :theftReductionPercentage="
-              commonData?.riskManagement?.theftReduction
+            :expectedAccidentGap="
+              commonData?.riskManagement?.expectedAccidentGap
             "
-            :insuranceSavingsPercentage="
-              commonData?.riskManagement?.insuranceSavings
+            :expectedSavingsFromPolicy="
+              commonData?.riskManagement?.expectedSavingsFromPolicy
             "
-            :stopReductionPercentage="commonData?.riskManagement?.stopReduction"
+            :expectedReductionThefts="
+              commonData?.riskManagement?.expectedReductionThefts
+            "
+            :reductionExpectedShutdowns="
+              commonData?.riskManagement?.expectedAccidentGap
+            "
           />
         </div>
       </el-collapse-item>
@@ -137,12 +137,17 @@ const activeNames = ref(['1'])
             @updateResultData="updateResultData"
             :monthlyDemand="commonData?.inventoryManagement?.monthlyDemand"
             :averageCost="commonData?.inventoryManagement?.averageCost"
+            :quantityOrderedProducts="
+              commonData?.inventoryManagement?.quantityOrderedProducts
+            "
             :averageOrderSize="
               commonData?.inventoryManagement?.averageOrderSize
             "
-            :maintenanceCost="commonData?.inventoryManagement?.productMaintenanceCost"
-            :orderPlacementCost="
-              commonData?.inventoryManagement?.quantityOrderedProducts
+            :productMaintenanceCost="
+              commonData?.inventoryManagement?.productMaintenanceCost
+            "
+            :forecastAccuracy="
+              commonData?.inventoryManagement?.forecastAccuracy
             "
             :warehouseReduction="
               commonData?.inventoryManagement?.warehouseReduction
@@ -163,13 +168,19 @@ const activeNames = ref(['1'])
           <StepFuelExpectedResults @update="updateData" />
           <StepFuelResult
             @updateResultData="updateResultData"
-            :consumptionControl="commonData?.fuelManagement?.consumptionControl"
             :fuelEconomy="commonData?.fuelManagement?.fuelEconomy"
             :fuelPrice="commonData?.fuelManagement?.fuelPrice"
-            :habitSavings="commonData?.fuelManagement?.habitSavings"
             :routeDistance="commonData?.fuelManagement?.routeDistance"
-            :routeOptimization="commonData?.fuelManagement?.routeOptimization"
             :controlledAssets="commonData?.assets?.numberControlledAssets"
+            :expectedRouteOptimization="
+              commonData?.fuelManagement?.expectedRouteOptimization
+            "
+            :expectedHabitSavings="
+              commonData?.fuelManagement?.expectedHabitSavings
+            "
+            :expectedConsumptionControl="
+              commonData?.fuelManagement?.expectedConsumptionControl
+            "
           />
         </div>
       </el-collapse-item>
@@ -184,7 +195,9 @@ const activeNames = ref(['1'])
         <div class="container">
           <StepMaintenanceMain @update="updateData" />
           <StepMaintenanceExpectedResults @update="updateData" />
+
           <StepMaintenanceResult
+            @updateResultData="updateResultData"
             :maintenanceCost="
               commonData?.maintenanceOptimization?.maintenanceCost
             "
@@ -213,20 +226,21 @@ const activeNames = ref(['1'])
           :reductionPercentage="
             commonData?.qualityManagement?.nonConformingProductReduction
           "
-          :maintenanceCost="
-            commonData?.maintenanceOptimization?.maintenanceCost
-          "
         />
       </el-collapse-item>
     </el-collapse>
     <TheCalculatorResult
-    :monthlyProductivitySavings="resultData.perfomanceResult?.monthlyProductionSavings"
-    :monthlyRiskSavings="resultData.riskManagementResult?.monthlyRiskSavings"
-    :monthlyInventorySavings="resultData.inventoryResult?.monthlyInventoryCost"
-    :totalFuelSavings="resultData.fuelResult?.fuelSavings"
-    :maintenanceSavings="resultData.qualityResult?.totalMaintenanceCost"
-    :maintenanceCosts="resultData.maintenanceResult?.savingsOnMaintenance"
-    :assetsToControl="commonData.assets?.numberControlledAssets"
+      :assetsToControl="commonData.assets?.numberControlledAssets"
+      :monthlyProductivitySavings="
+        resultData.perfomanceResult?.monthlyProductionSavings
+      "
+      :monthlyRiskSavings="resultData.riskManagementResult?.monthlyRiskSavings"
+      :monthlyInventorySavings="
+        resultData.inventoryResult?.monthlyInventorySavings
+      "
+      :totalFuelSavings="resultData.fuelResult?.fuelSavings"
+      :maintenanceSavings="resultData.qualityResult?.totalMaintenanceCost"
+      :maintenanceCosts="resultData.maintenanceResult?.savingsOnMaintenance"
     />
   </div>
 </template>

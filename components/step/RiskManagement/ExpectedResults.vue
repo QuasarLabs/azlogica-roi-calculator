@@ -5,21 +5,34 @@ import { UI_ELEMENTS } from "~/constants/uiElements";
 
 // Datos reactivos para la entrada
 const expectedResults: IRiskManagementExpectedResults = reactive({
-  stopReduction: 0, // % de disminución de paradas esperado
-  insuranceSavings: 0, // % de ahorros esperados de seguros
-  theftReduction: 0, // % de disminución de hurtos esperado
+  expectedAccidentGap: 0,
+  expectedSavingsFromPolicy: 0, 
+  expectedReductionThefts: 0, 
 });
 
 const emit = defineEmits(["update"]);
 function change() {
   emit("update", "riskManagement", expectedResults);
 }
+
+
+watch(
+  () => expectedResults,
+  (newValues) => {
+    emit("update", "riskManagement", newValues); 
+  },
+  {
+    immediate: true,
+    deep: true, 
+    once:true,
+  }
+);
 </script>
 
 <template>
   <section class="expected-results">
     <div class="expected-results__box">
-      <span class="subtitle">Resultados productivos esperados</span>
+      <span class="subtitle">Resultados esperados de gestión del riesgo </span>
     </div>
     <ol class="expected-results__list">
       <li
@@ -36,7 +49,11 @@ function change() {
           v-model="expectedResults[item.model as keyof IRiskManagementExpectedResults]"
           v-bind="item.props"
           @change="change"
-        ></component>
+        >
+        <template #prefix v-if="item.props.prefix">
+         {{item.props.prefix}}
+        </template>
+        </component>
       </li>
     </ol>
   </section>

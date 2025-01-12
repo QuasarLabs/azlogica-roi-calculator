@@ -5,10 +5,10 @@ import { UI_ELEMENTS } from "~/constants/uiElements";
 const emit = defineEmits(["update"]);
 
 const values:IPerfomanceExpectedResults = reactive({
-  reduccionTiempoImproductivo: 0,
-  productividadRRHH: 0,
-  reduccionCostosEnergia: 0,
-  reduccionParadas: 0,
+  reducingExpectedDowntime: 0,
+  expectedProductividadRRHH: 0,
+  expectedReductioEnergyCosts: 0,
+  reductionExpectedShutdowns: 0,
 });
 function change() {
   emit("update", "perfomance", values);
@@ -48,7 +48,11 @@ watch(
           v-model="values[item.model as keyof IPerfomanceExpectedResults]"
           v-bind="item.props"
           @change="change"
-        />
+        >
+        <template #prefix v-if="item.props.prefix">
+         {{item.props.prefix}}
+        </template>
+        </component>
       </li>
     </ol>
   </section>

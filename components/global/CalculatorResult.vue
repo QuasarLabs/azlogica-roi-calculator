@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import { computed, defineProps } from "vue";
+import { moneyFormatter } from "~/helpers/MoneyFormatter";
 
 // Пропсы для входных данных
 const props = defineProps({
+  assetsToControl: {
+    type: Number,
+    default: 0, // Сколько активов вы хотите контролировать
+  },
   monthlyProductivitySavings: {
     type: String || Number,
     default: 0, // Ежемесячная производительная экономия
@@ -27,10 +31,6 @@ const props = defineProps({
     type: String || Number,
     default: 0, // Расходы на обслуживание
   },
-  assetsToControl: {
-    type: String || Number,
-    default: 0, // Сколько активов вы хотите контролировать
-  },
 });
 
 // Стоимость системы
@@ -42,11 +42,11 @@ const systemCost = computed(() => {
 const totalMonthlySavings = computed(() => {
   return (
     +props.monthlyProductivitySavings +
-    +props.monthlyRiskSavings +
-    +props.monthlyInventorySavings +
-    +props.totalFuelSavings +
-    +props.maintenanceSavings +
-    +props.maintenanceCosts
+      +props.monthlyRiskSavings +
+      +props.monthlyInventorySavings +
+      +props.totalFuelSavings +
+      +props.maintenanceSavings +
+      +props.maintenanceCosts || 0.0
   );
 });
 
@@ -72,116 +72,94 @@ const netAnnualSavings = computed(() => {
 
 // ROI
 const roi = computed(() => {
-  if (systemCost.value === 0) return 0;
-  return +(+totalMonthlySavings.value - systemCost.value) / systemCost.value;
+  return (
+    (+totalAnnualSavings.value - +annualSystemCost.value) /
+    +annualSystemCost.value
+  ).toFixed(2);
 });
+
 </script>
 
 <template>
-  <section class="calculator-results">
-    <h2 class="">Cálculo del ROI</h2>
-    <div class="calculator-results__top">
-      <span>Ahorro mensual</span>
-      <span>Ahorro anual</span>
+  <section class="calculator-result">
+    <div class="calculator-result__box">
+      <div class="monthly-savings">
+        <h3 class="subtitle calculator-result__box-title">Ahorro mensual</h3>
+        <ul class="calculator-result__list">
+          <li class="calculator-result__item">
+            <span class="subtitle">Ahorros totales</span>
+            <el-input
+              :formatter="(value:number | string) =>moneyFormatter(value)"
+              v-model="totalMonthlySavings"
+              readonly
+            >
+              <template #prefix> $ </template>
+            </el-input>
+          </li>
+          <li class="calculator-result__item">
+            <span class="subtitle">Costo del sistema </span>
+            <el-input
+              :formatter="(value:number | string) =>moneyFormatter(value)"
+              v-model="systemCost"
+              readonly
+            >
+              <template #prefix> $ </template>
+            </el-input>
+          </li>
+          <li class="calculator-result__item">
+            <span class="subtitle">Ahorro neto </span>
+            <el-input
+              :formatter="(value:number | string) =>moneyFormatter(value)"
+              v-model="netMonthlySavings"
+              readonly
+            >
+              <template #prefix> $ </template>
+            </el-input>
+          </li>
+        </ul>
+      </div>
+     <div class="calculator-result__col annual-savings">
+        <h3 class="subtitle calculator-result__box-title">Ahorro anual</h3>
+        <ul
+          class="calculator-result__list calculator-result__list_ahorro-anual"
+        >
+          <li class="calculator-result__item">
+            <span class="subtitle">Ahorros totales</span>
+            <el-input
+              :formatter="(value:number | string) =>moneyFormatter(value)"
+              v-model="totalAnnualSavings"
+              readonly
+            >
+              <template #prefix> $ </template>
+            </el-input>
+          </li>
+          <li class="calculator-result__item">
+            <span class="subtitle">Costo del sistema </span>
+            <el-input
+              :formatter="(value:number | string) =>moneyFormatter(value)"
+              v-model="annualSystemCost"
+              readonly
+            >
+              <template #prefix> $ </template>
+            </el-input>
+          </li>
+          <li class="calculator-result__item">
+            <span class="subtitle">Ahorro neto </span>
+            <el-input
+              :formatter="(value:number | string) =>moneyFormatter(value)"
+              v-model="netAnnualSavings"
+              readonly
+            >
+              <template #prefix> $ </template>
+            </el-input>
+          </li>
+        </ul>
+      </div> 
     </div>
-    <div class="calculator-results__inner">
-    <!-- 1 КОЛОНКА -->
-      <div class="calculator-results__info">
-        <div class="calculator-results__box">
-          <!-- Ежемесячная экономия -->
-          <span>Ahorros totales (Общая экономия):</span>
-          <el-input :value="totalMonthlySavings.toFixed(2)" readonly>
-            <template #prefix> $ </template>
-          </el-input>
-        </div>
-        <div class="calculator-results__box">
-          <span>Costo del sistema (Стоимость системы):</span>
-          <el-input :value="systemCost.toFixed(2)" readonly>
-            <template #prefix> $ </template>
-          </el-input>
-        </div>
-        <div class="calculator-results__box">
-          <span>Ahorro neto (Чистая экономия):</span>
-          <el-input :value="netMonthlySavings.toFixed(2)" readonly>
-            <template #prefix> $ </template>
-          </el-input>
-        </div>
-      </div>
-    <!-- 2 КОЛОНКА -->
-      <div class="calculator-results__info">
-        <div class="calculator-results__box">
-          <!-- Годовая экономия -->
-          <span>Ahorros totales (Общая экономия):</span>
-          <el-input :value="totalAnnualSavings.toFixed(2)" readonly>
-            <template #prefix> $ </template>
-          </el-input>
-        </div>
-
-        <div class="calculator-results__box">
-          <!-- Годовая экономия -->
-          <span>Costo del sistema (Стоимость системы):</span>
-          <el-input :value="annualSystemCost.toFixed(2)" readonly>
-            <template #prefix> $ </template>
-          </el-input>
-        </div>
-      
-        <div class="calculator-results__box">
-          <!-- Годовая экономия -->
-          <span>Ahorro neto (Чистая экономия):</span>
-          <el-input :value="netAnnualSavings.toFixed(2)" readonly>
-            <template #prefix> $ </template>
-          </el-input>
-        </div>
-
-
-      </div>
-
-    </div>
-    <div class="calculator-results__footer">
-      <h2 class="roi">ROI</h2>
-      <div class="roi">{{ (roi * 100).toFixed(2) }}%</div>
-    </div>
-    <!-- Ежемесячная экономия -->
-    <!-- <div class="result-group">
-      <h3>Ahorro mensual</h3>
-      <div class="result">
-        <p>Ahorros totales (Общая экономия):</p>
-        <p class="value">{{ totalMonthlySavings.toFixed(2) }} ₽</p>
-      </div>
-      <div class="result">
-        <p>Costo del sistema (Стоимость системы):</p>
-        <p class="value">{{ systemCost.toFixed(2) }} ₽</p>
-      </div>
-      <div class="result">
-        <p>Ahorro neto (Чистая экономия):</p>
-        <p class="value">{{ netMonthlySavings.toFixed(2) }} ₽</p>
-      </div>
-    </div> -->
-
-    <!-- Годовая экономия -->
-    <!-- <div class="result-group">
-      <h3>Ahorro anual</h3>
-      <div class="result">
-        <p>Ahorros totales (Общая экономия):</p>
-        <p class="value">{{ totalAnnualSavings.toFixed(2) }} </p>
-      </div>
-      <div class="result">
-        <p>Costo del sistema (Стоимость системы):</p>
-        <p class="value">{{ annualSystemCost.toFixed(2) }} </p>
-      </div>
-      <div class="result">
-        <p>Ahorro neto (Чистая экономия):</p>
-        <p class="value">{{ netAnnualSavings.toFixed(2) }} </p>
-      </div>
-    </div> -->
-
     <!-- ROI -->
-    <!-- <div class="result-group">
-      <h3>ROI</h3>
-      <div class="result">
-        <p>Рентабельность инвестиций:</p>
-        <p class="value">{{ (roi * 100).toFixed(2) }}%</p>
-      </div>
-    </div> -->
+    <div class="calculator-result__roi title_large">
+      <h3>ROI =</h3>
+      <p class="value">{{ (+roi < 0 || !roi) ? 0 : roi}}%</p>
+    </div>
   </section>
 </template>

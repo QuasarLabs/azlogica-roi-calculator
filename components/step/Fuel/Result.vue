@@ -1,60 +1,76 @@
 <script setup lang="ts">
-import { computed, defineProps } from "vue";
+import {moneyFormatter} from '~/helpers/MoneyFormatter'
 
 const props = defineProps({
   fuelEconomy: {
     type: Number,
-    default:0, // Экономия топлива (км/л)
+    default:0, 
+    // Экономия топлива (км/л)
+    // Economía de combustible
   },
   fuelPrice: {
     type: Number,
-    default:0, // Цена топлива (за литр)
+    default:0, 
+    // Цена топлива (за литр)
+    // Precio de combustible por galón 
   },
   routeDistance: {
     type: Number,
-    default:0, // Дистанция маршрута (км)
-  },
-  routeOptimization: {
-    type: Number,
-    default:0, // % оптимизации маршрута
-  },
-  habitSavings: {
-    type: Number,
-    default:0, // % экономии за счет привычек водителей
-  },
-  consumptionControl: {
-    type: Number,
-    default:0, // % экономии за счет контроля потребления
+    default:0, 
+    // Пройденное расстояние по маршрутам
+    // Distancia recorrida en rutas
   },
   controlledAssets: {
     type: Number,
     default:0, // Количество контролируемых активов
   },
+
+
+
+  expectedRouteOptimization: {
+    type: Number,
+    default:0, 
+    // % оптимизации маршрута
+    // Ожидаемая оптимизация производительности маршрута
+  },
+  expectedHabitSavings: {
+    type: Number,
+    default:0, 
+    // % экономии за счет привычек водителей
+    // Экономия за счет ожидаемого улучшения привычек
+  },
+  expectedConsumptionControl: {
+    type: Number,
+    default:0, 
+    // % экономии за счет контроля потребления
+    // Control de consumo esperado
+  },
 });
 
 // Расчет ежемесячных затрат на топливо
+
+/**
+ * ((Пройденное расстояние по маршрутам / Экономия топлива) * Цена топлива за галлон)
+ *  * (Сколько активов вы хотите контролировать? (это из самой первой секции) * 25)
+ */
 const calculatedFuelCost = computed(() => {
-  const assetsFactor = props.controlledAssets * 25; // Среднее использование активов
-  const safeFuelEconomy = props.fuelEconomy || 1; // Защита от деления на 0
-
-  const totalCost =
-    ((props.routeDistance / safeFuelEconomy) * props.fuelPrice) * assetsFactor;
-
-    return totalCost.toFixed(2);
+  const f1 = props.routeDistance / props.fuelEconomy;
+  const f2 = props.fuelPrice;
+  const f3 = props.controlledAssets * 25;
+  return Math.round(f1 * f2 * f3) || 0.00;
 });
 
-// Расчет общей экономии топлива
+
 const calculatedFuelSavings = computed(() => {
-  const optimizationFactor = props.routeOptimization / 100 || 0;
-  const habitFactor = props.habitSavings / 100 || 0;
-  const controlFactor = props.consumptionControl / 100 || 0;
-
-  const totalSavings =
-    (parseFloat(calculatedFuelCost.value.replace("$", "")) || 0) *
-    (optimizationFactor + habitFactor + controlFactor);
-
-  return totalSavings.toFixed(2);
+  const expectedRouteOptimizationDecimal = props.expectedRouteOptimization /100;
+  const expectedHabitSavingsDecimal = props.expectedHabitSavings / 100;
+  const expectedConsumptionControlDecimal = props.expectedConsumptionControl / 100;
+  const f1 = +calculatedFuelCost.value * expectedRouteOptimizationDecimal;
+  const f2 = +calculatedFuelCost.value * expectedHabitSavingsDecimal;
+  const f3 = +calculatedFuelCost.value * expectedConsumptionControlDecimal;
+  return Math.round(f1 + f2 + f3) || 0.00;
 });
+
 const emit = defineEmits(["updateResultData"]);
 
 // Следим за изменением результатов и эмитим событие
@@ -79,6 +95,7 @@ watch(
         <span class="subtitle">Costos de combustible mensual:</span>
         <el-input
           v-model="calculatedFuelCost"
+           :formatter="(value:number | string) =>moneyFormatter(value)"
           :min="0"
           size="large"
           readonly
@@ -92,6 +109,7 @@ watch(
         <span class="subtitle">Ahorro total de combustible:</span>
         <el-input
           v-model="calculatedFuelSavings"
+          :formatter="(value:number | string) =>moneyFormatter(value)"
           :min="0"
           size="large"
           readonly
@@ -105,18 +123,3 @@ watch(
   </section>
 </template>
 
-<style scoped lang="scss">
-.result {
-  &__inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 34px;
-  }
-}
-
-.result-box {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-</style>

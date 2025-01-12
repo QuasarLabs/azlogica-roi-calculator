@@ -1,3 +1,5 @@
+import { COLOMBIAN_PESO } from "./shared";
+
 export const MAINTENANCE_CONST = [
   {
     id: 1,
@@ -8,6 +10,7 @@ export const MAINTENANCE_CONST = [
       min: 0,
       size: "large",
       placeholder: "Ingrese el valor",
+      prefix:COLOMBIAN_PESO
     },
   },
 ];
@@ -24,6 +27,7 @@ export const MAINTENANCE_EXPECTED_CONST = [
       max: 100,
       size: "large",
       placeholder: "Ingrese el valor (0%-100%)",
+      prefix:'%'
     },
   },
 ];

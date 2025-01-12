@@ -1,104 +1,124 @@
 <script setup lang="ts">
-
 const emit = defineEmits(["updateResultData"]);
-
+import {moneyFormatter} from '~/helpers/MoneyFormatter'
 const props = defineProps({
   laborHours: {
-    type: Number ,
-    default:0,
+    // Количество часов в рабочем дне
+    // Cantidad de horas en jornada laboral
+    type: Number,
+    default: 0,
   },
   monthlyIncome: {
+    // Ежемесячный доход
+    //Ingresos mensuales
+
     type: Number,
-    default:0,
+    default: 0,
   },
   dailyDowntime: {
+    // Время простоя в день
+    //Tiempo muerto diario
     type: Number,
-    default:0,
+    default: 0,
   },
   payrollValue: {
+    // Сумма заработной платы
+    // Valor de la nómina
     type: Number,
-    default:0,
+    default: 0,
   },
   workerCount: {
+    // Количество работников
+    // Cantidad de trabajadores
     type: Number,
-    default:0,
+    default: 0,
   },
-  productiveHRPercentage: {
-    type: Number,
-    default:0,
-  },
+
   monthlyEnergyCost: {
+    // Ежемесячная стоимость энергии
+    // Costo de energía mensual
     type: Number,
-    default:0,
+    default: 0,
   },
   monthlyMachineStopCost: {
+    //Стоимость ежемесячных остановок техники
+    // Costo de paradas de maquinaria mensuales
     type: Number,
-    default:0,
+    default: 0,
   },
-  expectedDowntimeReduction: {
+  percentageReductionExpectedStops: {
+    // % сокращения ожидаемого времени простоя
+    // % de reducción de tiempo improductivo esperado
     type: Number,
-    default:0,
+    default: 0, // ЭТО ПРОЦЕНТ %
   },
-  expectedEnergyCostReduction: {
+
+  expectedPercentageReductionEnergyCosts: {
+    // Ожидаемое процентное снижение затрат на электроэнергию
+    //% esperado de disminución de costos de energía
     type: Number,
-    default:0,
+    default: 0, // ЭТО ПРОЦЕНТ %
   },
-  expectedStopReduction: {
+  expectedProductividadRRHH: {
+    // ПРОЦЕНТ ожидаемой производительности персонала
+    //% de productividad de RRHH espera
     type: Number,
-    default:0,
+    default: 0, // ЭТО ПРОЦЕНТ %
   },
+  percentageProductiveStaff: {
+    /* ПРОЦЕНТ ПРОДУКТИВНОГО ПЕРСОНАЛА */
+    /* de RRHH productivo */
+    type: Number,
+    default: 0, // ЭТО ПРОЦЕНТ %
+  },
+});
+
+const monthlyProductionSavings = computed(() => {
+  const laborHours = props.laborHours;
+  const monthlyIncome = props.monthlyIncome;
+  const dailyDowntime = props.dailyDowntime;
+  const payrollValue = props.payrollValue;
+  const workerCount = props.workerCount;
+  const expectedProductividadRRHH = props.expectedProductividadRRHH / 100; // Преобразуем процент в десятичную дробь
+  const monthlyEnergyCost = props.monthlyEnergyCost;
+  const monthlyMachineStopCost = props.monthlyMachineStopCost;
+  const percentageReductionExpectedStops =
+    props.percentageReductionExpectedStops / 100; // Преобразуем процент в десятичную дробь
+  const expectedPercentageReductionEnergyCosts =
+    props.expectedPercentageReductionEnergyCosts / 100; // Преобразуем процент в десятичную дробь
+
+  const f1 =
+    ((laborHours * monthlyIncome) / (laborHours - dailyDowntime) -
+      monthlyIncome) *
+    percentageReductionExpectedStops;
+  const f2 =
+    (payrollValue / workerCount) *
+    (workerCount * (1 - expectedProductividadRRHH));
+  const f3 = expectedPercentageReductionEnergyCosts * monthlyEnergyCost;
+  const f4 = monthlyMachineStopCost * 0.35;
+  const result = f1 + f2 + f3 + f4;
+  return Math.round(result) || 0.00;
 });
 
 // Первая строка расчета
 const monthlyProductionCosts = computed(() => {
-
-  const laborHoursDiff = props.laborHours - props.dailyDowntime;
-  const safeDenominator = laborHoursDiff !== 0 ? laborHoursDiff : 1;
-
-  const firstPart =
-    (props.laborHours * props.monthlyIncome) / safeDenominator - props.monthlyIncome;
-
-  const secondPart =
-    (props.payrollValue / (props.workerCount || 1)) *
-    props.workerCount *
-    (1 - props.productiveHRPercentage / 100);
-
+  const laborHours = props.laborHours;
+  const monthlyIncome = props.monthlyIncome;
+  const dailyDowntime = props.dailyDowntime;
+  const payrollValue = props.payrollValue;
+  const workerCount = props.workerCount;
+  const percentageProductiveStaff = props.percentageProductiveStaff / 100; // Преобразуем процент в десятичную дробь
+  // Первая часть выражения
+  const f1 =
+    (laborHours * monthlyIncome) / (laborHours - dailyDowntime) - monthlyIncome;
+  const f2 =
+    (payrollValue / workerCount) *
+    (workerCount * (1 - percentageProductiveStaff));
   const total =
-    firstPart + secondPart + props.monthlyEnergyCost + props.monthlyMachineStopCost;
+    f1 + f2 + props.monthlyEnergyCost + props.monthlyMachineStopCost;
 
-  return total.toFixed(2);
+  return Math.round(total) || 0.00;
 });
-
-// Вторая строка расчета
-const monthlyProductionSavings = computed(() => {
-
-  const laborHoursDiff = props.laborHours - props.dailyDowntime;
-  const safeDenominator = laborHoursDiff !== 0 ? laborHoursDiff : 1;
-
-  const firstPart =
-    ((props.laborHours * props.monthlyIncome) / safeDenominator - props.monthlyIncome) *
-    (props.expectedDowntimeReduction / 100 || 0);
-
-  const payrollPerWorker =
-    props.workerCount !== 0 ? props.payrollValue / props.workerCount : 0;
-
-  const secondPart =
-    payrollPerWorker *
-    props.workerCount *
-    (1 - (props.productiveHRPercentage / 100 || 0));
-
-  const energyReduction =
-    props.monthlyEnergyCost * (props.expectedEnergyCostReduction / 100 || 0);
-
-  const stopReduction =
-    props.monthlyMachineStopCost * (props.expectedStopReduction / 100 || 0);
-
-  const total = firstPart + secondPart + energyReduction + stopReduction;
-
-  return total.toFixed(2);
-});
-
-// Следим за изменением результатов и эмитим событие
 watch(
   [monthlyProductionCosts, monthlyProductionSavings],
   ([newResult1, newResult2]) => {
@@ -106,44 +126,36 @@ watch(
       monthlyProductionCosts: newResult1,
       monthlyProductionSavings: newResult2,
     });
-  },{
-    immediate:true
+  },
+  {
+    immediate: true,
   }
 );
 </script>
-
 
 <template>
   <section class="result">
     <div class="result__inner">
       <div class="result-box">
-      <span class="subtitle">Costos productivos mensuales:</span>  
+        <span class="subtitle">Costos productivos mensuales:</span>
         <el-input
+          :formatter="(value:number | string) => moneyFormatter(value)"
           v-model="monthlyProductionCosts"
-          :min="0"
-          :max="100"
-          :step="1"
           size="large"
           readonly
         >
-        <template #prefix>
-          $
-        </template>
+          <template #prefix> $ </template>
         </el-input>
       </div>
       <div class="result-box">
         <span class="subtitle">Ahorros productivos mensuales:</span>
         <el-input
+          :formatter="(value:number | string) =>moneyFormatter(value)"
           v-model="monthlyProductionSavings"
-          :min="0"
-          :max="100"
-          :step="1"
           size="large"
           readonly
         >
-        <template #prefix>
-          $
-        </template>
+          <template #prefix> $ </template>
         </el-input>
       </div>
     </div>

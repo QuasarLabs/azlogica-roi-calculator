@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { moneyFormatter } from "~/helpers/MoneyFormatter";
+
 const props = defineProps({
-  stolenAssetsPerMonth: {
+  stolenAssetsPerMonth: { // + 
     type: Number,
     default: 0, // Сумма украденных активов за месяц
   },
@@ -14,55 +16,56 @@ const props = defineProps({
   },
   annualInsurancePremium: {
     type: Number,
-    default: 0,// Размер годовой страховой премии
+    default: 0, // Размер годовой страховой премии
   },
-  theftReductionPercentage: {
+  expectedReductionThefts: {
     type: Number,
     default: 0, // % ожидаемого снижения краж
   },
-  insuranceSavingsPercentage: {
+  expectedSavingsFromPolicy: {
     type: Number,
-    default: 0, // % ожидаемой экономии от страхования
+    default: 0, // % ожидаемой экономии от политики
   },
-  stopReductionPercentage: {
+  expectedAccidentGap: {
+    type: Number,
+    default: 0, // % ожидаемого сокращения несчастных случаев
+  },
+  accidentCosts: {
+    type: Number,
+    default:0, // Стоимость аварии
+  },
+  reductionExpectedShutdowns:{ // +
     type: Number,
     default: 0, // % сокращения ожидаемых остановок
-  },
+
+  }
 });
+
+
 
 // Формула для ежемесячных расходов на риски
 const monthlyRiskCosts = computed(() => {
-  const totalCosts = (
+  const totalCosts =
     props.stolenAssetsPerMonth * props.assetValue +
     props.accidentCost +
-    props.annualInsurancePremium / 12
-  );
-  return totalCosts !== undefined && !isNaN(totalCosts)
-    ? totalCosts.toFixed(2)
-    : "Datos insuficientes";
+    props.annualInsurancePremium / 12;
+  return Math.round(totalCosts) || 0.00;
 });
 
 // Формула для ежемесячной экономии на рисках
 const monthlyRiskSavings = computed(() => {
-  const theftSavings =
-    (props.theftReductionPercentage / 100) *
-    props.stolenAssetsPerMonth *
-    props.assetValue;
+  const expectedReductionTheftsDecimal = props.expectedReductionThefts / 100;
+  const expectedSavingsFromPolicyDecimal = props.expectedSavingsFromPolicy / 100;
+  const reductionExpectedShutdownsDecimal = props.reductionExpectedShutdowns / 100;
 
-  const insuranceSavings =
-    props.annualInsurancePremium / 12 - 
-    (props.annualInsurancePremium * (props.insuranceSavingsPercentage / 100)) / 12;
 
-  const accidentSavings =
-    props.accidentCost * (props.stopReductionPercentage / 100);
+const f1 = (expectedReductionTheftsDecimal * props.stolenAssetsPerMonth * props.assetValue);
 
-  const totalSavings = theftSavings + insuranceSavings + accidentSavings;
-  return totalSavings !== undefined && !isNaN(totalSavings)
-    ? totalSavings.toFixed(2)
-    : "Datos insuficientes";
+const f2 = ((props.annualInsurancePremium / 12) - ((props.annualInsurancePremium * expectedSavingsFromPolicyDecimal) / 12));
+
+const f3 = props.accidentCosts * reductionExpectedShutdownsDecimal;
+return Math.round(f1 + f2 + f3) || 0.00;
 });
-
-
 const emit = defineEmits(["updateResultData"]);
 
 // Следим за изменением результатов и эмитим событие
@@ -73,11 +76,11 @@ watch(
       monthlyRiskCosts: newResult1,
       monthlyRiskSavings: newResult2,
     });
-  },{
-    immediate:true
+  },
+  {
+    immediate: true,
   }
 );
-
 </script>
 
 <template>
@@ -85,7 +88,7 @@ watch(
     <div class="result__inner">
       <!-- ЕЖЕМЕСЯЧНЫЕ РАСХОДЫ НА РИСКИ -->
       <div class="result-box">
-        <span class="subtitle">Costos de riesgos mensuales:</span>  
+        <span class="subtitle">Costos de riesgos mensuales:</span>
         <el-input
           v-model="monthlyRiskCosts"
           :min="0"
@@ -93,10 +96,9 @@ watch(
           :step="1"
           size="large"
           readonly
+          :formatter="(value:number | string) =>moneyFormatter(value)"
         >
-        <template #prefix>
-          $
-        </template>
+          <template #prefix> $ </template>
         </el-input>
       </div>
       <!-- ЕЖЕМЕСЯЧНАЯ ЭКОНОМИЯ НА РИСКАХ -->
@@ -109,13 +111,11 @@ watch(
           :step="1"
           size="large"
           readonly
+          :formatter="(value:number | string) =>moneyFormatter(value)"
         >
-        <template #prefix>
-          $
-        </template>
+          <template #prefix> $ </template>
         </el-input>
       </div>
     </div>
   </section>
 </template>
-

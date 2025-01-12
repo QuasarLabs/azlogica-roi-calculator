@@ -4,9 +4,9 @@ import type { IFuelManagementExpectedResults } from "~/types/FuelManagement";
 import { FUEL_EXPECTED_CONST } from "~/constants/FuelConst";
 // Реактивные данные для хранения ответов
 const values:IFuelManagementExpectedResults = reactive({
-  routeOptimization: 0, // Ожидаемая оптимизация маршрута (в %)
-  habitSavings: 0, // Экономия за счет улучшения привычек (в %)
-  consumptionControl: 0, // Ожидаемый контроль потребления (в %)
+  expectedRouteOptimization: 0, // Ожидаемая оптимизация маршрута (в %)
+  expectedHabitSavings: 0, // Экономия за счет улучшения привычек (в %)
+  expectedConsumptionControl: 0, // Ожидаемый контроль потребления (в %)
 });
 
 // Создание события для отправки данных
@@ -49,7 +49,11 @@ watch(
           v-model="values[item.model as keyof IFuelManagementExpectedResults]"
           v-bind="item.props"
           @change="change"
-        />
+        >
+        <template #prefix v-if="item.props.prefix">
+         {{item.props.prefix}}
+        </template>
+        </component>
       </li>
     </ol>
   </section>

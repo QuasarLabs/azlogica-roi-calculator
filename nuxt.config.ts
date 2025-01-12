@@ -1,11 +1,45 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2024-11-01',
+  compatibilityDate: "2024-11-01",
   devtools: { enabled: false },
-  modules: [
-    '@element-plus/nuxt'
-  ],
-  elementPlus: { /** Options */ },
+  modules: ["@element-plus/nuxt"],
+  
+  app: {
+    head: {
+      link: [
+        {
+          rel: "apple-touch-icon",
+          href: "/apple-touch-icon.png",
+          sizes: "180x180",
+        },
+        {
+          rel: "icon",
+          href: "/favicon-32x32.png",
+          type: "image/png",
+          sizes: "32x32",
+        },
+        {
+          rel: "icon",
+          href: "/favicon-16x16.png",
+          type: "image/png",
+          sizes: "16x16",
+        },
+        {
+          rel: "manifest",
+          href: "/site.webmanifest",
+        },
+        {
+          rel: "mask-icon",
+          href: "/safari-pinned-tab.svg",
+          color: "#ffffff",
+        },
+      ],
+      meta: [
+        { name: "msapplication-TileColor", content: "#ffffff" },
+        { name: "theme-color", content: "#ffffff" },
+      ],
+    },
+  },
+
   vite: {
     css: {
       preprocessorOptions: {
@@ -15,13 +49,12 @@ export default defineNuxtConfig({
       },
     },
   },
-  css: ['./assets/styles/index.scss'],
+  css: ["./assets/styles/index.scss"],
   components: [
-    { path: '~/components/base', prefix: 'base' },
-    { path: '~/components/global', prefix: 'the' },
-    { path: '~/components/global', prefix: 'step' },
-    { path: '~/components/sections' },
-    '~/components',
+    { path: "~/components/base", prefix: "base" },
+    { path: "~/components/global", prefix: "the" },
+    { path: "~/components/global", prefix: "step" },
+    { path: "~/components/sections" },
+    "~/components",
   ],
-
-})
+});

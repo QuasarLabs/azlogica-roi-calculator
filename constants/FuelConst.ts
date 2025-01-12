@@ -1,3 +1,5 @@
+import { COLOMBIAN_PESO } from "./shared";
+
 export const FUEL_CONST = [
   {
     id: 1,
@@ -5,6 +7,18 @@ export const FUEL_CONST = [
     desc: "Ahorro de combustible (en km por galón)",
     content: "el-input-number",
     model: "fuelEconomy",
+    props: {
+      min: 0,
+      step: 1,
+      size: "large",
+    },
+  },
+  {
+    id: 3,
+    title: "Distancia recorrida en rutas",
+    desc: "Distancia recorrida por las rutas",
+    content: "el-input-number",
+    model: "routeDistance",
     props: {
       min: 0,
       step: 1,
@@ -21,18 +35,7 @@ export const FUEL_CONST = [
       min: 0,
       step: 0.01,
       size: "large",
-    },
-  },
-  {
-    id: 3,
-    title: "Distancia recorrida en rutas",
-    desc: "Distancia recorrida por las rutas",
-    content: "el-input-number",
-    model: "routeDistance",
-    props: {
-      min: 0,
-      step: 1,
-      size: "large",
+      prefix: COLOMBIAN_PESO,
     },
   },
 ];
@@ -44,12 +47,29 @@ export const FUEL_EXPECTED_CONST = [
     description:
       "Las empresas de telemetría informan ahorros promedio del 16%.<br />Telematics companies report average savings of 16%.",
     content: "el-input-number",
-    model: "routeOptimization",
+    model: "expectedRouteOptimization",
     props: {
       min: 0,
       max: 100,
       size: "large",
       placeholder: "Ingrese el valor (0%-100%)",
+      prefix: "%",
+    },
+  },
+  {
+    id: 3,
+    title: "Control de consumo esperado",
+    subtitle: "Control esperado del consumo",
+    description:
+      "Un control del uso del consumo puede ahorrar hasta un 13%.<br />According to telematics companies, consumption control can save up to 13%.",
+    content: "el-input-number",
+    model: "expectedConsumptionControl",
+    props: {
+      min: 0,
+      max: 100,
+      size: "large",
+      placeholder: "Ingrese el valor (0%-100%)",
+      prefix: "%",
     },
   },
   {
@@ -60,27 +80,13 @@ export const FUEL_EXPECTED_CONST = [
     description:
       "Conducir de manera más eficiente puede mejorar el rendimiento del galón hasta en un 33%.<br />More efficient driving can improve fuel economy by up to 33%.",
     content: "el-input-number",
-    model: "habitSavings",
+    model: "expectedHabitSavings",
     props: {
       min: 0,
       max: 100,
       size: "large",
       placeholder: "Ingrese el valor (0%-100%)",
-    },
-  },
-  {
-    id: 3,
-    title: "Control de consumo esperado",
-    subtitle: "Control esperado del consumo",
-    description:
-      "Un control del uso del consumo puede ahorrar hasta un 13%.<br />According to telematics companies, consumption control can save up to 13%.",
-    content: "el-input-number",
-    model: "consumptionControl",
-    props: {
-      min: 0,
-      max: 100,
-      size: "large",
-      placeholder: "Ingrese el valor (0%-100%)",
+      prefix: "%",
     },
   },
 ];

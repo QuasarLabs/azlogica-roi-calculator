@@ -7,9 +7,9 @@ export interface IFuelManagement {
   
   
   export interface IFuelManagementExpectedResults {
-    routeOptimization: number, // Ожидаемая оптимизация маршрута (в %)
-    habitSavings: number, // Экономия за счет улучшения привычек (в %)
-    consumptionControl: number, // Ожидаемый контроль потребления (в %)
-  
+    expectedRouteOptimization:number, // Ожидаемая оптимизация маршрута (в %)
+    expectedHabitSavings: number, // Экономия за счет улучшения привычек (в %)
+    expectedConsumptionControl: number, // Ожидаемый контроль потребления (в %)
+    
   }
   

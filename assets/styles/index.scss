@@ -69,21 +69,15 @@ main {
 .subtitle {
   font-size: 18px;
   line-height: 130%;
-  // margin-bottom: 12px;
-  // @media screen and (min-width: $lg) {
-  //   font-size: 24px;
-  //   line-height: 110%;
-  // }
-  // @media screen and (min-width: $xxxxl) {
-  //   font-size: 34px;
-  // }
 }
 /* ОСНОВНЫЕ ЗАГОЛОВКИ */
 .title_large {
   font-weight: 500;
-  font-size: 55px;
+  font-size: 35px;
   line-height: 100%;
-  letter-spacing: -4px;
+  @media screen and (min-width: $lg) {
+    font-size: 55px;
+  }
 }
 
 .title {
@@ -281,6 +275,10 @@ select:-webkit-autofill:focus {
     @media screen and (min-width: $sm) {
       flex-direction: row;
       align-items: center;
+      justify-content: space-between;
+    }
+    @media screen and (min-width: $lg) {
+      justify-content: start;
     }
   }
   &__inner {
@@ -378,7 +376,94 @@ select:-webkit-autofill:focus {
   }
 }
 
-.roi{
-  font-size: 54px;
+// .roi {
+//   font-size: 54px;
+// }
+.azlogica .calculator-result{
+  padding: 12px 0;
+  &__title{
+    text-align: center;
+    margin-bottom: 12px;
+  }
+}
+.azlogica .calculator-result{
+  color: $darkPrimary;
+  &__box{
+    @media screen and (min-width: $sm) {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+  
+    }
+  
+    // gap: 14px;
+  }
+  ul{
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background-color: $yellow;
+    color:$white;
+    height: 100%;
+    li{
+      display: flex;
+      flex-direction: column;
+    }
+  }
+  &__roi{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    background-color: #538DD5;
+    padding: 12px;
+    color:$white;
+  }
+  &__box-title{
+    color: $white;
+    background-color: #595959;
+    text-align: center;
+  }
+  &__list{
+    padding: 8px;
+    &_ahorro-anual{
+      padding-left: 12px;
+    }
+  }
+}
+li{
+  height: 100%;
+}
 
+._sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.calculator-result__item{
+  display: flex;
+  justify-content: space-between;
+}
+
+.azlogica .footer{
+  padding: 12px 0;
+  &__inner{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  a{
+    min-width: 200px;
+  }
+}
+
+.azlogica .monthly-savings,.annual-savings{
+  display: flex;
+  flex-direction: column;
 }

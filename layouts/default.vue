@@ -1,12 +1,12 @@
 <script lang="ts" setup></script>
 
 <template>
-  <div class="layout_default">
+  <div class="layout_default azlogica">
     <TheHeader />
     <main class="main azlogica">
       <slot />
     </main>
-    <!-- <TheFooter :is-show="isHeaderFooterShow" /> -->
+    <TheFooter />
   </div>
 </template>
 <style lang="scss" scoped>
@@ -19,7 +19,7 @@
   display: flex;
   flex-direction: column;
   gap: 44px;
-  padding: 74px 0;
+  padding: 0 0 24px 0;
 }
 // .layout_default:has(.error) {
 //   background-color: $white;

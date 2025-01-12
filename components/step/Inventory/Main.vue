@@ -50,7 +50,11 @@ watch(
           :size="item.props.size"
           :placeholder="item.props.placeholder"
           @change="change"
-        ></component>
+        >
+        <template #prefix v-if="item.props.prefix">
+         {{item.props.prefix}}
+        </template>
+        </component>
       </li>
     </ol>
   </section>

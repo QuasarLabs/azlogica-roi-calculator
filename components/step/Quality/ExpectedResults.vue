@@ -50,7 +50,11 @@ watch(
           v-model="values[item.model as keyof IQualityManagementExpectedResults]"
           v-bind="item.props"
           @change="change"
-        />
+        >
+        <template #prefix v-if="item.props.prefix">
+         {{item.props.prefix}}
+        </template>
+        </component>
       </li>
     </ol>
   </section>

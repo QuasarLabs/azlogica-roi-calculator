@@ -10,7 +10,7 @@ const values: { [key: string]: any } = reactive({
   radio: true,
   type: null,
   answer: "",
-  numberControlledAssets: 0,
+  numberControlledAssets: 1,
 });
 
 // Вопросы, зависящие от выбранного типа
@@ -37,7 +37,7 @@ const assetCountQuestion = computed(() => {
       case 2:
         return "¿Cuántos activos desea controlar?";
       case 3:
-        return "¿Cuántas personas desea controlar?";
+        return "¿A cuántas personas desea monitorear?";
       default:
         return "";
     }

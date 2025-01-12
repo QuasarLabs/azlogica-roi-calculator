@@ -1,3 +1,5 @@
+import { COLOMBIAN_PESO } from "./shared";
+
 export const QUALITY_MANAGEMENT_CONST = [
     {
       id: 1,
@@ -19,6 +21,7 @@ export const QUALITY_MANAGEMENT_CONST = [
         min: 0,
         size: "large",
         placeholder: "Ingrese el valor",
+        prefix:COLOMBIAN_PESO
       },
     },
   ];
@@ -32,8 +35,10 @@ export const QUALITY_EXPECTED_CONST = [
     content: "el-input-number",
     props: {
       min: 0,
+      max: 100,
       size: "large",
       placeholder: "Ingrese el valor",
+      prefix:'%'
     },
   },
 ]

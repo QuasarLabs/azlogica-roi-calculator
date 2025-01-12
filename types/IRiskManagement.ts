@@ -7,7 +7,7 @@ export interface IRiskManagement {
 
 
 export interface IRiskManagementExpectedResults {
-  stopReduction: number;
-  insuranceSavings: number;
-  theftReduction: number;
+  expectedAccidentGap: number,
+  expectedSavingsFromPolicy: number, 
+  expectedReductionThefts: number, 
 }

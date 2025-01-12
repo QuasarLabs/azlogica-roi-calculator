@@ -14,6 +14,18 @@ const emit = defineEmits(["update"]);
 function change() {
   emit("update", "riskManagement", riskManagementData);
 }
+
+watch(
+  () => riskManagementData,
+  (newValues) => {
+    emit("update", "riskManagement", newValues); 
+  },
+  {
+    immediate: true,
+    deep: true, 
+    once:true,
+  }
+);
 </script>
 
 <template>
@@ -34,7 +46,12 @@ function change() {
           v-bind="item.props"
           placeholder="Ingrese el valor"
           @change="change"
-        ></component>
+        >
+        <template #prefix v-if="item.props.prefix">
+         {{item.props.prefix}}
+        </template>
+        
+        </component>
       </li>
     </ol>
   </section>

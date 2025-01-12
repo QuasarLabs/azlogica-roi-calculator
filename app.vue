@@ -1,15 +1,36 @@
+<script setup>
+useSeoMeta({
+  title: 'AZLOGICA - calculadora ROI',
+  keywords:
+    'Azlogica, IoT, ROI, calculadora ROI, Inteligencia Artificial, Internet de las cosas',
+  description:
+    'Calculadora ROI - Internet de las Cosas e Inteligencia Artificial Somos expertos en la Adquisición de datos para decisiones informadas en tiempo real, ayudando a lograr resultado',
+  ogType: 'website',
+  ogSiteName: 'AZLOGICA - calculadora ROI',
+  ogTitle: 'AZLOGICA - calculadora ROI',
+  ogDescription:
+    'Calculadora ROI - Internet de las Cosas e Inteligencia Artificial Somos expertos en la Adquisición de datos para decisiones informadas en tiempo real, ayudando a lograr resultado',
+  twitterCard: 'summary',
+  twitterTitle: 'AZLOGICA - calculadora ROI',
+  twitterImageAlt: 'AZLOGICA - calculadora ROI',
+  twitterDescription:
+    'Calculadora ROI - Internet de las Cosas e Inteligencia Artificial Somos expertos en la Adquisición de datos para decisiones informadas en tiempo real, ayudando a lograr resultado',
+});
+useHead({
+  htmlAttrs: {
+    lang: 'es',
+  },
+});
+</script>
+
 <template>
   <div>
     <NuxtLayout>
       <NuxtRouteAnnouncer />
+      <h1 class="_sr-only">Calculadora ROI</h1>
       <div class="azlogica">
         <NuxtPage />
       </div>
     </NuxtLayout>
-    <!-- <template>
-      <el-button @click="ElMessage('hello')">button</el-button>
-      <ElButton :icon="ElIconEditPen" type="success">button</ElButton>
-      <LazyElButton type="warning">lazy button</LazyElButton>
-    </template> -->
   </div>
 </template>

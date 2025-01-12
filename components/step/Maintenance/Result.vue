@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import {moneyFormatter} from '~/helpers/MoneyFormatter'
+
 // Пропсы с результатами из предыдущих секций
 const props = defineProps({
   maintenanceCost: {
@@ -13,7 +15,7 @@ const props = defineProps({
 
 // Вычисление ежемесячных расходов на обслуживание
 const monthlyMaintenanceCosts = computed(() => {
-  return props.maintenanceCost.toFixed(2);
+  return props.maintenanceCost
 });
 
 // Вычисление экономии на обслуживании
@@ -21,7 +23,7 @@ const savingsOnMaintenance = computed(() => {
   return (
     Number(monthlyMaintenanceCosts.value) *
     (props.expectedCostReduction / 100)
-  ).toFixed(2);
+  )
 });
 
 const emit = defineEmits(["updateResultData"]); // Объявляем событие
@@ -49,6 +51,7 @@ watch(
         <!-- Ежемесячные расходы на обслуживание -->
         <el-input
           v-model="monthlyMaintenanceCosts"
+           :formatter="(value:number | string) =>moneyFormatter(value)"
           :min="0"
           :max="100"
           :step="1"
@@ -63,6 +66,7 @@ watch(
         <!-- Экономия на обслуживании -->
         <el-input
           v-model="savingsOnMaintenance"
+          :formatter="(value:number | string) =>moneyFormatter(value)"
           :min="0"
           :max="100"
           :step="1"

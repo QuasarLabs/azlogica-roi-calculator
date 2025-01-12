@@ -4,5 +4,5 @@ export interface IQualityManagement {
 }
 
 export interface IQualityManagementExpectedResults {
-  nonConformingProductReduction: 0; // Reducción de productos no conformes (%)
+  nonConformingProductReduction: number; // Reducción de productos no conformes (%)
 }

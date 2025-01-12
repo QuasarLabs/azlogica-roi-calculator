@@ -42,7 +42,11 @@ watch(
           v-model="values[item.model as keyof IFuelManagement]"
           v-bind="item.props"
           @change="change"
-        ></component>
+        >
+        <template #prefix v-if="item.props.prefix">
+         {{item.props.prefix}}
+        </template>
+        </component>
       </li>
     </ol>
   </section>

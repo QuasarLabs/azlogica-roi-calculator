@@ -1,40 +1,38 @@
 <script setup lang="ts">
+import { moneyFormatter } from "~/helpers/MoneyFormatter";
+
 // Пропсы с результатами из предыдущих секций
 const props = defineProps({
   defectiveProductCount: {
     type: Number,
-    default: 0, // Ежемесячное количество несоответствующей продукции
+    default: 0,
+    // Ежемесячное количество несоответствующей продукции
   },
   productCommercialValue: {
     type: Number,
-    default: 0, // Коммерческая ценность продукции
-  },
-  monthlyMaintenanceCosts: {
-    type: Number,
-    default: 0, // Ежемесячные расходы на обслуживание
+    default: 0,
+    // Коммерческая ценность продукции
   },
   reductionPercentage: {
     type: Number,
-    default: 0, // Сокращение количества несоответствующей продукции в процентах
+    default: 0,
+    // Сокращение количества несоответствующей продукции в процентах
   },
 });
 
 // Вычисление ежемесячных расходов на несоответствующую продукцию
 const monthlyDefectiveProductCost = computed(() => {
-  if (
-    typeof props.defectiveProductCount === "number" &&
-    typeof props.productCommercialValue === "number" &&
-    props.defectiveProductCount >= 0 &&
-    props.productCommercialValue >= 0
-  ) {
-    return props.defectiveProductCount * props.productCommercialValue
-  }
+  return props.defectiveProductCount * props.productCommercialValue || 0.0;
 });
 
 // Вычисление общих расходов на обслуживание
 const totalMaintenanceCost = computed(() => {
-    const reduction = props.monthlyMaintenanceCosts * (props.reductionPercentage / 100);
-    return props.monthlyMaintenanceCosts - reduction;
+  const reductionPercentageDecimal = props.reductionPercentage / 100;
+  const f1 =
+    props.defectiveProductCount *
+    reductionPercentageDecimal *
+    props.productCommercialValue;
+  return f1 || 0.0;
 });
 const emit = defineEmits(["updateResultData"]); // Объявляем событие
 
@@ -42,12 +40,13 @@ const emit = defineEmits(["updateResultData"]); // Объявляем событ
 watch(
   [monthlyDefectiveProductCost, totalMaintenanceCost],
   ([newMonthlyCost, newTotalCost]) => {
-    emit("updateResultData","qualityResult", {
-        monthlyDefectiveProductCost: newMonthlyCost,
-        totalMaintenanceCost: newTotalCost,
+    emit("updateResultData", "qualityResult", {
+      monthlyDefectiveProductCost: newMonthlyCost,
+      totalMaintenanceCost: newTotalCost,
     });
-  },{
-    immediate:true
+  },
+  {
+    immediate: true,
   }
 );
 </script>
@@ -58,13 +57,31 @@ watch(
       <!-- Ежемесячные расходы на несоответствующую продукцию -->
       <div class="result-box">
         <span class="subtitle"> Costos de mantenimiento mensual: </span>
-        <el-input v-model="monthlyDefectiveProductCost" size="large" readonly />
+        <el-input
+          :formatter="(value:number | string) =>moneyFormatter(value)"
+          v-model="monthlyDefectiveProductCost"
+          size="large"
+          readonly
+        >
+        <template #prefix>
+          $
+        </template>
+        </el-input>
       </div>
 
       <!-- Общие расходы на обслуживание -->
       <div class="result-box">
         <span class="subtitle"> Costos de mantenimiento: </span>
-        <el-input v-model="totalMaintenanceCost" size="large" readonly />
+        <el-input
+          :formatter="(value:number | string) =>moneyFormatter(value)"
+          v-model="totalMaintenanceCost"
+          size="large"
+          readonly
+        >
+        <template #prefix>
+          $
+        </template>
+        </el-input>
       </div>
     </div>
   </section>

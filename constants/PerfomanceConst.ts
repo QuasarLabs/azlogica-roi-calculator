@@ -1,19 +1,21 @@
+import { COLOMBIAN_PESO } from "./shared";
+
 export const PERFOMANCE_CONST = [
   {
     id:1,
-    title: "Cantidad de horas en jornada laboral",
+    title: "Cantidad de horas en jornada laboral", // Количество часов в рабочем дне
     content: "el-input-number",
     model: "laborHours",
     props: {
       min: 0,
-      max: 24,
+      max: 23.9,
       step: 1,
       size: "large",
     },
   },
   {
     id:5,
-    title: "% de RRHH productivo", 
+    title: "% de RRHH productivo", // % продуктивного персонала
     content: "el-input-number",
     model: "productiveHRPercentage",
     props: {
@@ -21,6 +23,7 @@ export const PERFOMANCE_CONST = [
       max: 100,
       step: 1,
       size: "large",
+      prefix: '%'
     },
   },
   {
@@ -30,24 +33,25 @@ export const PERFOMANCE_CONST = [
     model: "dailyDowntime",
     props: {
       min: 0.0,
-      max: 24.0,
+      max: 23.9,
       step: 0.1,
       size: "large",
     },
   },
   {
     id:6,
-    title: "Costo de energía mensual",
+    title: "Costo de energía mensual", // Ежемесячная стоимость энергии
     content: "el-input-number",
     model: "monthlyEnergyCost",
     props: {
       min: 0,
       size: "large",
+      prefix: COLOMBIAN_PESO
     },
   },
   {
     id:3,
-    title: "Cantidad de trabajadores",
+    title: "Cantidad de trabajadores", // Количество работников
     content: "el-input-number",
     model: "workerCount",
     props: {
@@ -57,34 +61,37 @@ export const PERFOMANCE_CONST = [
   },
   {
     id:7,
-    title: "Ingresos mensuales",
+    title: "Ingresos mensuales", // Ежемесячный доход
     content: "el-input-number",
     model: "monthlyIncome",
     props: {
       min: 0,
       size: "large",
+      prefix: COLOMBIAN_PESO
     },
   },
 
   {
     id:4,
-    title: "Valor de la nómina",
+    title: "Valor de la nómina", // Сумма заработной платы
     content: "el-input-number",
     model: "payrollValue",
     props: {
       min: 0,
       size: "large",
+      prefix: COLOMBIAN_PESO
     },
   },
 
   {
     id:8,
-    title: "Costo de paradas de maquinaria mensuales",
+    title: "Costo de paradas de maquinaria mensuales", //Стоимость ежемесячных остановок техники
     content: "el-input-number",
     model: "monthlyMachineStopCost",
     props: {
       min: 0,
       size: "large",
+      prefix: COLOMBIAN_PESO
     },
   },
   
@@ -93,54 +100,58 @@ export const PERFOMANCE_CONST = [
 export const PERFOMANCE_EXPECTED_CONST = [
   {
     id: 1,
-    title: "% Reducción esperada del tiempo de inactividad",
+    title: "% de reducción de tiempo improductivo esperado", // % сокращения ожидаемого времени простоя
     content: "el-input-number",
-    model: "reduccionTiempoImproductivo",
+    model: "reducingExpectedDowntime",
     props: {
       min: 0,
       max: 100,
       step: 1,
       size: "large",
+      prefix:"%"
     },
     description: "El monitoreo de operadores y equipos reduce el tiempo de inactividad en hasta el 50%",
   },
   {
-    id: 2,
-    title: "% Reducción esperada de paradas",
+    id: 3,
+    title: "% de productividad de RRHH esperado", // % ожидаемой производительности персонала
     content: "el-input-number",
-    model: "reduccionParadas",
+    model: "expectedProductividadRRHH",
     props: {
       min: 0,
       max: 100,
       step: 1,
       size: "large",
+      prefix: '%'
     },
-    description: "Las alertas tempranas mediante modelos predictivos pueden reducir el costo de las paradas en un 30-45%",
+    description: "Plataformas de IoT de gestión de personal pueden aumentar la productividad de RRHH en un 99,99%",
   },
   {
-    id: 3,
-    title: "% Productividad esperada del personal",
+    id: 2,
+    title: "% de disminución de paradas esperado", // % сокращения ожидаемых остановок
     content: "el-input-number",
-    model: "productividadRRHH",
+    model: "reductionExpectedShutdowns",
     props: {
       min: 0,
       max: 100,
       step: 1,
       size: "large",
+      prefix: '%'
     },
-    description: "Las plataformas de gestión de personal IoT pueden aumentar la productividad laboral del personal en un 99,99%",
+    description: "Las alertas tempranas con modelos predictivos pueden reducir el costo de paradas entre un 30 a un 45%",
   },
   {
     id: 4,
-    title: "% Reducción esperada en costos de energía",
+    title: "% esperado de disminución de costos de energía", // Ожидаемое процентное снижение затрат на электроэнергию
+    description:'El monitoreo remoto de maquinaria industrial.Reduce entre el 45 a 50% de costos de energía',
     content: "el-input-number",
-    model: "reduccionCostosEnergia",
+    model: "expectedReductioEnergyCosts",
     props: {
       min: 0,
       max: 100,
       step: 1,
       size: "large",
+      prefix: '%'
     },
-    description: "El monitoreo remoto de equipos industriales reduce los costos de energía en un 45-50%",
   },
 ];

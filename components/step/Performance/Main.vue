@@ -4,7 +4,7 @@ import { PERFOMANCE_CONST } from "~/constants/PerfomanceConst";
 import { UI_ELEMENTS } from "~/constants/uiElements";
 const emit = defineEmits(["update"]);
 const values: { [key: string]: any } = reactive({
-  laborHours: 0.0,
+  laborHours: 0,
   dailyDowntime: 0.0,
   workerCount: 0,
   payrollValue: 0,
@@ -44,7 +44,11 @@ watch(
           v-model="values[item.model]"
           v-bind="item.props"
           @change="change"
-        />
+        >
+        <template #prefix v-if="item.props.prefix">
+         {{item.props.prefix}}
+        </template>
+        </component>
       </li>
     </ol>
   </section>
@@ -69,6 +73,7 @@ watch(
   &__item {
     display: flex;
     width: 100%;
+    height:100%;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
