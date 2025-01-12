@@ -8,27 +8,27 @@ const props = defineProps({
     default: 0, // Сколько активов вы хотите контролировать
   },
   monthlyProductivitySavings: {
-    type: String || Number,
+    type: [String,Number],
     default: 0, // Ежемесячная производительная экономия
   },
   monthlyRiskSavings: {
-    type: String || Number,
+    type: [String,Number],
     default: 0, // Ежемесячная экономия на рисках
   },
   monthlyInventorySavings: {
-    type: String || Number,
+    type: [String,Number],
     default: 0, // Ежемесячная экономия запасов
   },
   totalFuelSavings: {
-    type: String || Number,
+    type: [String,Number],
     default: 0, // Общая экономия топлива
   },
   maintenanceSavings: {
-    type: String || Number,
+    type: [String,Number],
     default: 0, // Экономия на обслуживании
   },
   maintenanceCosts: {
-    type: String || Number,
+    type: [String,Number],
     default: 0, // Расходы на обслуживание
   },
 });
@@ -159,7 +159,7 @@ const roi = computed(() => {
     <!-- ROI -->
     <div class="calculator-result__roi title_large">
       <h3>ROI =</h3>
-      <p class="value">{{ (+roi < 0 || !roi) ? 0 : roi}}%</p>
+      <p class="value">{{ (+roi < 0 || !roi || isNaN(+roi)) ? 0 : roi}}%</p>
     </div>
   </section>
 </template>

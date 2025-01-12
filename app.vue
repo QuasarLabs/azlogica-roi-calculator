@@ -21,16 +21,14 @@ useHead({
     lang: 'es',
   },
 });
+
+
 </script>
 
 <template>
-  <div>
     <NuxtLayout>
       <NuxtRouteAnnouncer />
       <h1 class="_sr-only">Calculadora ROI</h1>
-      <div class="azlogica">
         <NuxtPage />
-      </div>
     </NuxtLayout>
-  </div>
 </template>

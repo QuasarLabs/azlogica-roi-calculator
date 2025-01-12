@@ -14,6 +14,7 @@
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
+  height:100%;
 }
 .main {
   display: flex;

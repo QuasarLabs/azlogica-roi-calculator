@@ -33,20 +33,25 @@ function updateResultData(key: keyof IResultData, obj: ValueOf<IResultData>) {
 }
 
 const activeNames = ref(["1"]);
+const handleChange = (val: CollapseModelValue) => {
+  console.log(val)
+}
 </script>
 
 <template>
   <div class="container">
-    <el-collapse v-model="activeNames">
+    <el-collapse v-model="activeNames"  @change="handleChange">
       <!-- ШАГ 1 -->
-      <el-collapse-item class="" name="1">
+      <el-collapse-item name="1">
         <template #title>
           <div class="section-step">
             <BaseIcon :icon="`material-symbols:circle`" />
             <h2 class="step-title">{{ STEP_TITLES[0].name }}</h2>
           </div>
         </template>
-        <StepManagementMain @update="updateData" />
+        <div>
+          <StepManagementMain @update="updateData" />
+        </div>
       </el-collapse-item>
       <!-- ШАГ 2 -->
       <el-collapse-item name="2">

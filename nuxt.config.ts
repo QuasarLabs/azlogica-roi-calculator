@@ -2,7 +2,6 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: false },
   modules: ["@element-plus/nuxt"],
-  
   app: {
     head: {
       link: [
@@ -41,6 +40,7 @@ export default defineNuxtConfig({
   },
 
   vite: {
+    base:'/azlogica-roi-calculator/',
     css: {
       preprocessorOptions: {
         scss: {

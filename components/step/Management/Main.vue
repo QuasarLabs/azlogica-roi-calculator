@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { reactive, computed } from "vue";
-import { MANAGEMENT_ELEMENTS } from "~/constants/ManagementConst";
+import { MANAGEMENT_SELECT_OPTIONS_ELEMENTS } from "~/constants/ManagementConst";
 import { UI_ELEMENTS } from "~/constants/uiElements";
 
 const emit = defineEmits(["update"]);
@@ -10,7 +10,7 @@ const values: { [key: string]: any } = reactive({
   radio: true,
   type: null,
   answer: "",
-  numberControlledAssets: 1,
+  numberControlledAssets: 0,
 });
 
 // Вопросы, зависящие от выбранного типа
@@ -52,42 +52,39 @@ function change() {
 watch(
   () => values,
   (newValues) => {
-    emit("update", "assets", newValues); 
+    emit("update", "assets", newValues);
   },
   {
     immediate: true,
-    deep: true, 
-    once:true,
+    deep: true,
+    once: true,
   }
 );
-
 </script>
 
 <template>
   <section class="step-one">
     <ol class="step-one__list">
-      <li class="step-one__item" v-for="el in MANAGEMENT_ELEMENTS" :key="el.id">
-        <span v-if="el.title" class="subtitle">
-          {{ el.title }}
+      <li class="step-one__item">
+        <span class="subtitle">
+          ¿Tiene la necesidad de gestionar y controlar sus activos?
         </span>
-          <component
-            v-model="values[el.model]"
-            :is="UI_ELEMENTS[el.content]"
-            v-bind="el.props"
-             @change="change"
-          >
-            <template v-if="el.children && el.children.length">
-              <component
-                v-for="child in el.children"
-                :key="child.id"
-                v-bind="child.props"
-                :is="UI_ELEMENTS[child.content]"
-                 @change="change"
-              />
-            </template>
-          </component>
+        <el-radio-group v-model="values.radio" @change="change">
+          <el-radio size="large" label="Si" :value="true" />
+          <el-radio size="large" label="No" :value="false" />
+        </el-radio-group>
       </li>
-
+      <li class="step-one__item">
+        <span class="subtitle"> ¿Qué tipo de Activo desea controlar? </span>
+        <el-select
+          clearable
+          placeholder="Seleccione el tipo de activo"
+          size="large"
+          v-model="values.type"
+        >
+        <el-option v-bind="option.props" v-for="option in MANAGEMENT_SELECT_OPTIONS_ELEMENTS" :key="option.id"/>
+        </el-select>
+      </li>
       <!-- Дополнительные вопросы для выбранного типа -->
       <template v-if="values.type">
         <li class="step-one__item">
@@ -101,7 +98,12 @@ watch(
         </li>
         <li class="step-one__item">
           <span class="subtitle">{{ assetCountQuestion }}</span>
-          <el-input-number @change="change" v-model="values.numberControlledAssets" :min="1" size="large" />
+          <el-input-number
+            @change="change"
+            v-model="values.numberControlledAssets"
+            :min="1"
+            size="large"
+          />
         </li>
       </template>
     </ol>
