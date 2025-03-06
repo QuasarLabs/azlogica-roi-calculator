@@ -21,5 +21,5 @@ export default interface IResultData {
     maintenanceResult:{
         monthlyMaintenanceCosts: string,
         savingsOnMaintenance: string,
-    }
+    }  | null,
 }
