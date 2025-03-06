@@ -14,16 +14,16 @@
 
 @font-face {
   font-weight: 400;
-  font-family: "Helvetica";
+  font-family:'DM Sans';
   font-style: normal;
-  src: url("../../public/fonts/HelveticaNeueRoman.woff2") format("woff2");
+  src: url("../../public/fonts/DMSans-Regular.woff2") format("woff2");
   font-display: swap;
 }
 @font-face {
   font-weight: 500;
-  font-family: "Helvetica";
+  font-family: 'DM Sans';
   font-style: normal;
-  src: url("../../public/fonts/HelveticaNeueMedium.woff2") format("woff2");
+  src: url("../../public/fonts/DMSans-Medium.woff2") format("woff2");
   font-display: swap;
 }
 
@@ -39,7 +39,7 @@ body {
   overflow: hidden;
   color: $white;
   font-size: 16px;
-  font-family: "Helvetica";
+  font-family: "DM Sans";
   line-height: 100%;
   background-color: $darkPrimary;
   ::selection {
@@ -75,36 +75,17 @@ main {
   font-weight: 500;
   font-size: 35px;
   line-height: 100%;
-  @media screen and (min-width: $lg) {
-    font-size: 55px;
+  @media screen and (min-width: $xl) {
+    font-size: 45px;
   }
 }
 
-.title {
-  font-weight: 500;
-  font-size: 54px;
-  font-family: "Space Grotesk";
-  line-height: 109%;
-
-  @media screen and (min-width: $md) {
-    font-size: 60px;
-  }
-  @media screen and (min-width: $lg) {
-    font-size: 90px;
-  }
-  @media screen and (min-width: $xl) {
-    font-size: 100px;
-  }
-  @media screen and (min-width: $xxxxl) {
-    font-size: 120px;
-    letter-spacing: -2px;
-  }
 }
 
 .case-title {
   font-weight: 500;
   font-size: 42px;
-  font-family: "Helvetica";
+  font-family: "DM Sans";
   line-height: 110%;
 
   @media screen and (min-width: $md) {
@@ -117,7 +98,7 @@ main {
 .case-section-title {
   font-weight: 500;
   font-size: 49px;
-  font-family: "Helvetica";
+  font-family: "DM Sans";
   line-height: 110%;
   @media screen and (min-width: $md) {
     font-size: 54px;
@@ -144,7 +125,7 @@ main {
 .bold-text {
   font-weight: 500;
   font-size: 26px;
-  font-family: "Helvetica";
+  font-family: "DM Sans";
   line-height: 110%;
 
   @media screen and (min-width: $xxxxl) {
@@ -188,7 +169,7 @@ main {
 
 .text_base {
   font-size: 16px;
-  font-family: "Helvetica";
+  font-family: "DM Sans";
   line-height: 130%;
 }
 
@@ -253,7 +234,6 @@ select:-webkit-autofill:focus {
   display: flex;
   align-items: center;
   gap: 12px;
-  // margin-bottom: 24px;
   color: $yellow;
   svg {
     transition: $transitionDuration color;
@@ -383,6 +363,10 @@ select:-webkit-autofill:focus {
 }
 .azlogica .calculator-result{
   color: $darkPrimary;
+  &__info{
+    display: flex;
+    flex-direction: column;
+  }
   &__box{
     @media screen and (min-width: $sm) {
       display: grid;
@@ -446,6 +430,7 @@ li{
 .calculator-result__item{
   display: flex;
   justify-content: space-between;
+  gap: 12px;
 }
 
 .azlogica .footer{
