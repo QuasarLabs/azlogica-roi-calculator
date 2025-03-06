@@ -1,14 +1,12 @@
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
+  ssr: false,
   devtools: { enabled: false },
-  modules: ["@element-plus/nuxt"],
+  modules: ["@element-plus/nuxt", "@sidebase/nuxt-pdf"],
   app: {
     head: {
       link: [
-        { rel: 'icon', 
-          type: 'image/x-icon', 
-          href: '/favicon.ico' 
-        },
+        { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
         {
           rel: "apple-touch-icon",
           href: "/apple-touch-icon.png",
@@ -44,7 +42,7 @@ export default defineNuxtConfig({
   },
 
   vite: {
-    base:'/azlogica-roi-calculator/',
+    base: "/azlogica-roi-calculator/",
     css: {
       preprocessorOptions: {
         scss: {
@@ -57,8 +55,7 @@ export default defineNuxtConfig({
   components: [
     { path: "~/components/base", prefix: "base" },
     { path: "~/components/global", prefix: "the" },
-    { path: "~/components/global", prefix: "step" },
-    { path: "~/components/sections" },
+    { path: "~/components/global", prefix: "step" }, 
     "~/components",
   ],
 });
