@@ -1,8 +1,11 @@
 <script lang="ts" setup>
 import type { ValueOf } from "element-plus/es/components/table/src/table-column/defaults.mjs";
 import { STEP_TITLES } from "~/constants/StepTitles";
+import { PrintingService } from "~/services/PrintingService";
 import type ICommonData from "~/types/ICommonData";
 import type IResultData from "~/types/IResultData";
+import { ref, reactive } from "vue";
+
 const commonData: ICommonData = reactive({
   assets: null,
   perfomance: null,
@@ -12,6 +15,7 @@ const commonData: ICommonData = reactive({
   maintenanceOptimization: null,
   qualityManagement: null,
 });
+
 const resultData: IResultData = reactive({
   perfomanceResult: null,
   riskManagementResult: null,
@@ -20,27 +24,101 @@ const resultData: IResultData = reactive({
   qualityResult: null,
   maintenanceResult: null,
 });
-function updateData(key: keyof ICommonData, newValue: ValueOf<ICommonData>) {
+
+const globalResultData = reactive({
+  totalMonthlySavings: null,
+  systemCost: null,
+  netMonthlySavings: null,
+  totalAnnualSavings: null,
+  annualSystemCost: null,
+  netAnnualSavings: null,
+  roi: null,
+});
+
+/**
+ * Обновляет данные commonData
+ */
+function updateData(key: keyof ICommonData, newValue: Partial<ICommonData[keyof ICommonData]>) {
   if (commonData[key] && commonData[key] !== null) {
-    Object.assign(commonData, { [key]: { ...commonData[key], ...newValue } });
+    Object.assign(commonData[key], newValue);
   } else {
-    Object.assign(commonData, { [key]: newValue });
+    commonData[key] = newValue as any; // Приводим к типу, так как commonData[key] может быть null
   }
 }
 
-function updateResultData(key: keyof IResultData, obj: ValueOf<IResultData>) {
-  resultData[key] = obj;
+/**
+ * Обновляет глобальные данные результата
+ */
+function updateGlobalResultData(newData: Partial<typeof globalResultData>) {
+  Object.assign(globalResultData, newData);
 }
 
-const activeNames = ref(["1"]);
-const handleChange = (val: CollapseModelValue) => {
-  console.log(val)
+/**
+ * Обновляет данные результата
+ */
+ function updateResultData<K extends keyof IResultData>(
+  key: K,
+  obj: Partial<NonNullable<IResultData[K]>>
+) {
+  if (resultData[key]) {
+    Object.assign(resultData[key], obj);
+  } else {
+    resultData[key] = obj as IResultData[K]; // Приведение типов, если поле было null
+  }
+}
+const pdfContent = ref<string | null>(null);
+
+/**
+ * Генерирует HTML и отправляет на сервер
+ */
+const generateAndSendPDF = async () => {
+  pdfContent.value = getResultHtmlMarkup() || "";
+  if (!pdfContent.value) return;
+
+  try {
+    await sendHTMLToBackend(pdfContent.value);
+  } catch (error) {
+    console.error("❌ Ошибка при отправке HTML:", error);
+  }
+};
+
+/**
+ * Отправляет HTML на сервер
+ */
+const sendHTMLToBackend = async (htmlContent: string) => {
+  const formData = new FormData();
+  formData.append("html", new Blob([htmlContent], { type: "text/html" }), "report.html");
+
+  try {
+    const response = await fetch("/api/submit", {
+      method: "POST",
+      body: formData,
+    });
+    const result = await response.json();
+    console.log("📨 Ответ сервера:", result);
+  } catch (error) {
+    console.error("❌ Ошибка сети:", error);
+  }
+};
+
+/**
+ * Генерирует HTML-структуру отчета
+ */
+function getResultHtmlMarkup(): string {
+  const printServiceInstance = new PrintingService();
+  printServiceInstance.setData({
+    ...commonData,
+    ...resultData,
+    finalResults: globalResultData,
+  });
+
+  return printServiceInstance.generateHtmlResult().outerHTML ?? "";
 }
 </script>
 
 <template>
   <div class="container">
-    <el-collapse v-model="activeNames"  @change="handleChange">
+    <el-collapse>
       <!-- ШАГ 1 -->
       <el-collapse-item name="1">
         <template #title>
@@ -72,21 +150,15 @@ const handleChange = (val: CollapseModelValue) => {
             :payrollValue="commonData?.perfomance?.payrollValue"
             :workerCount="commonData?.perfomance?.workerCount"
             :monthlyEnergyCost="commonData?.perfomance?.monthlyEnergyCost"
-            :monthlyMachineStopCost="
-              commonData?.perfomance?.monthlyMachineStopCost
-            "
+            :monthlyMachineStopCost="commonData?.perfomance?.monthlyMachineStopCost"
             :percentageReductionExpectedStops="
               commonData?.perfomance?.reducingExpectedDowntime
             "
             :expectedPercentageReductionEnergyCosts="
               commonData?.perfomance?.expectedReductioEnergyCosts
             "
-            :expectedProductividadRRHH="
-              commonData?.perfomance?.expectedProductividadRRHH
-            "
-            :percentageProductiveStaff="
-              commonData?.perfomance?.productiveHRPercentage
-            "
+            :expectedProductividadRRHH="commonData?.perfomance?.expectedProductividadRRHH"
+            :percentageProductiveStaff="commonData?.perfomance?.productiveHRPercentage"
           />
         </div>
       </el-collapse-item>
@@ -103,27 +175,17 @@ const handleChange = (val: CollapseModelValue) => {
           <StepRiskManagementExpectedResults @update="updateData" />
           <StepRiskManagementResult
             @updateResultData="updateResultData"
-            :stolenAssetsPerMonth="
-              commonData?.riskManagement?.stolenAssetsPerMonth
-            "
+            :stolenAssetsPerMonth="commonData?.riskManagement?.stolenAssetsPerMonth"
             :assetValue="commonData?.riskManagement?.assetValue"
             :accidentCost="commonData?.riskManagement?.accidentCosts"
             :accidentCosts="commonData?.riskManagement?.accidentCosts"
-            :annualInsurancePremium="
-              commonData?.riskManagement?.annualInsurancePremium
-            "
-            :expectedAccidentGap="
-              commonData?.riskManagement?.expectedAccidentGap
-            "
+            :annualInsurancePremium="commonData?.riskManagement?.annualInsurancePremium"
+            :expectedAccidentGap="commonData?.riskManagement?.expectedAccidentGap"
             :expectedSavingsFromPolicy="
               commonData?.riskManagement?.expectedSavingsFromPolicy
             "
-            :expectedReductionThefts="
-              commonData?.riskManagement?.expectedReductionThefts
-            "
-            :reductionExpectedShutdowns="
-              commonData?.riskManagement?.expectedAccidentGap
-            "
+            :expectedReductionThefts="commonData?.riskManagement?.expectedReductionThefts"
+            :reductionExpectedShutdowns="commonData?.riskManagement?.expectedAccidentGap"
           />
         </div>
       </el-collapse-item>
@@ -145,18 +207,12 @@ const handleChange = (val: CollapseModelValue) => {
             :quantityOrderedProducts="
               commonData?.inventoryManagement?.quantityOrderedProducts
             "
-            :averageOrderSize="
-              commonData?.inventoryManagement?.averageOrderSize
-            "
+            :averageOrderSize="commonData?.inventoryManagement?.averageOrderSize"
             :productMaintenanceCost="
               commonData?.inventoryManagement?.productMaintenanceCost
             "
-            :forecastAccuracy="
-              commonData?.inventoryManagement?.forecastAccuracy
-            "
-            :warehouseReduction="
-              commonData?.inventoryManagement?.warehouseReduction
-            "
+            :forecastAccuracy="commonData?.inventoryManagement?.forecastAccuracy"
+            :warehouseReduction="commonData?.inventoryManagement?.warehouseReduction"
           />
         </div>
       </el-collapse-item>
@@ -180,9 +236,7 @@ const handleChange = (val: CollapseModelValue) => {
             :expectedRouteOptimization="
               commonData?.fuelManagement?.expectedRouteOptimization
             "
-            :expectedHabitSavings="
-              commonData?.fuelManagement?.expectedHabitSavings
-            "
+            :expectedHabitSavings="commonData?.fuelManagement?.expectedHabitSavings"
             :expectedConsumptionControl="
               commonData?.fuelManagement?.expectedConsumptionControl
             "
@@ -203,12 +257,8 @@ const handleChange = (val: CollapseModelValue) => {
 
           <StepMaintenanceResult
             @updateResultData="updateResultData"
-            :maintenanceCost="
-              commonData?.maintenanceOptimization?.maintenanceCost
-            "
-            :expectedCostReduction="
-              commonData?.maintenanceOptimization?.costReduction
-            "
+            :maintenanceCost="commonData?.maintenanceOptimization?.maintenanceCost"
+            :expectedCostReduction="commonData?.maintenanceOptimization?.costReduction"
           />
         </div>
       </el-collapse-item>
@@ -224,9 +274,7 @@ const handleChange = (val: CollapseModelValue) => {
         <StepQualityExpectedResults @update="updateData" />
         <StepQualityResult
           @updateResultData="updateResultData"
-          :defectiveProductCount="
-            commonData?.qualityManagement?.nonConformingProducts
-          "
+          :defectiveProductCount="commonData?.qualityManagement?.nonConformingProducts"
           :productCommercialValue="commonData?.qualityManagement?.productValue"
           :reductionPercentage="
             commonData?.qualityManagement?.nonConformingProductReduction
@@ -236,16 +284,17 @@ const handleChange = (val: CollapseModelValue) => {
     </el-collapse>
     <TheCalculatorResult
       :assetsToControl="commonData.assets?.numberControlledAssets"
-      :monthlyProductivitySavings="
-        resultData.perfomanceResult?.monthlyProductionSavings
-      "
+      :monthlyProductivitySavings="resultData.perfomanceResult?.monthlyProductionSavings"
       :monthlyRiskSavings="resultData.riskManagementResult?.monthlyRiskSavings"
-      :monthlyInventorySavings="
-        resultData.inventoryResult?.monthlyInventorySavings
-      "
+      :monthlyInventorySavings="resultData.inventoryResult?.monthlyInventorySavings"
       :totalFuelSavings="resultData.fuelResult?.fuelSavings"
       :maintenanceSavings="resultData.qualityResult?.totalMaintenanceCost"
       :maintenanceCosts="resultData.maintenanceResult?.savingsOnMaintenance"
+      @updateGlobalResultData="updateGlobalResultData"
     />
+    <TheResultForm @generateAndSendPDF="generateAndSendPDF" />
   </div>
 </template>
+<style>
+@import url("../assets/styles/index.scss");
+</style>
