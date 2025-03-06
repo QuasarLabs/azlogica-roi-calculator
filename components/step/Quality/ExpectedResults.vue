@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import type { IQualityManagementExpectedResults } from "~/types/QualityManagement";
-import { QUALITY_EXPECTED_CONST } from "~/constants/QualityManagementConst";
+import {
+  QUALITY_EXPECTED_CONST,
+  QUALITY_EXPECTED_TITLE,
+} from "~/constants/QualityManagementConst";
 import { UI_ELEMENTS } from "~/constants/uiElements";
 
 // Datos reactivos para la entrada
@@ -32,7 +35,8 @@ watch(
   <section class="expected-results">
     <div class="expected-results__box">
       <span class="subtitle">
-        Resultados esperados de optimización de mantenimiento
+        <!-- Resultados esperados de optimización de mantenimiento -->
+        {{ QUALITY_EXPECTED_TITLE }}
       </span>
     </div>
     <ol class="expected-results__list">
@@ -51,9 +55,9 @@ watch(
           v-bind="item.props"
           @change="change"
         >
-        <template #prefix v-if="item.props.prefix">
-         {{item.props.prefix}}
-        </template>
+          <template #prefix v-if="item.props.prefix">
+            {{ item.props.prefix }}
+          </template>
         </component>
       </li>
     </ol>

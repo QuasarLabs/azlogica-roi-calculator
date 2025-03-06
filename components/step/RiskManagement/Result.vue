@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { moneyFormatter } from "~/helpers/MoneyFormatter";
+import { RISK_MANAGEMENT_RESULT_LABELS } from "../../../constants/RiskManagementConst";
 
 const props = defineProps({
-  stolenAssetsPerMonth: { // + 
+  stolenAssetsPerMonth: {
+    // +
     type: Number,
     default: 0, // Сумма украденных активов за месяц
   },
@@ -32,16 +34,14 @@ const props = defineProps({
   },
   accidentCosts: {
     type: Number,
-    default:0, // Стоимость аварии
+    default: 0, // Стоимость аварии
   },
-  reductionExpectedShutdowns:{ // +
+  reductionExpectedShutdowns: {
+    // +
     type: Number,
     default: 0, // % сокращения ожидаемых остановок
-
-  }
+  },
 });
-
-
 
 // Формула для ежемесячных расходов на риски
 const monthlyRiskCosts = computed(() => {
@@ -49,7 +49,7 @@ const monthlyRiskCosts = computed(() => {
     props.stolenAssetsPerMonth * props.assetValue +
     props.accidentCost +
     props.annualInsurancePremium / 12;
-  return Math.round(totalCosts) || 0.00;
+  return Math.round(totalCosts) || 0.0;
 });
 
 // Формула для ежемесячной экономии на рисках
@@ -58,13 +58,15 @@ const monthlyRiskSavings = computed(() => {
   const expectedSavingsFromPolicyDecimal = props.expectedSavingsFromPolicy / 100;
   const reductionExpectedShutdownsDecimal = props.reductionExpectedShutdowns / 100;
 
+  const f1 =
+    expectedReductionTheftsDecimal * props.stolenAssetsPerMonth * props.assetValue;
 
-const f1 = (expectedReductionTheftsDecimal * props.stolenAssetsPerMonth * props.assetValue);
+  const f2 =
+    props.annualInsurancePremium / 12 -
+    (props.annualInsurancePremium * expectedSavingsFromPolicyDecimal) / 12;
 
-const f2 = ((props.annualInsurancePremium / 12) - ((props.annualInsurancePremium * expectedSavingsFromPolicyDecimal) / 12));
-
-const f3 = props.accidentCosts * reductionExpectedShutdownsDecimal;
-return Math.round(f1 + f2 + f3) || 0.00;
+  const f3 = props.accidentCosts * reductionExpectedShutdownsDecimal;
+  return Math.round(f1 + f2 + f3) || 0.0;
 });
 const emit = defineEmits(["updateResultData"]);
 
@@ -88,7 +90,9 @@ watch(
     <div class="result__inner">
       <!-- ЕЖЕМЕСЯЧНЫЕ РАСХОДЫ НА РИСКИ -->
       <div class="result-box">
-        <span class="subtitle">Costos de riesgos mensuales:</span>
+        <span class="subtitle"
+          >{{ RISK_MANAGEMENT_RESULT_LABELS.MONTHLY_RISK_COSTS.name }}:</span
+        >
         <el-input
           v-model="monthlyRiskCosts"
           :min="0"
@@ -103,7 +107,9 @@ watch(
       </div>
       <!-- ЕЖЕМЕСЯЧНАЯ ЭКОНОМИЯ НА РИСКАХ -->
       <div class="result-box">
-        <span class="subtitle">Ahorros de riesgos mensuales:</span>
+        <span class="subtitle"
+          >{{ RISK_MANAGEMENT_RESULT_LABELS.MONTHLY_RISK_SAVINGS.name }}:</span
+        >
         <el-input
           v-model="monthlyRiskSavings"
           :min="0"

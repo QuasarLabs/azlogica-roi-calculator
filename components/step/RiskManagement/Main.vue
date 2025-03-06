@@ -8,6 +8,7 @@ const riskManagementData:IRiskManagement = reactive({
   assetValue: 0,
   accidentCosts: 0,
   annualInsurancePremium: 0,
+  descriptionAccident:``
 });
 
 const emit = defineEmits(["update"]);

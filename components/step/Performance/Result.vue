@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { PERFORMANCE_RESULT_LABELS } from "../../../constants/PerfomanceConst";
 const emit = defineEmits(["updateResultData"]);
-import {moneyFormatter} from '~/helpers/MoneyFormatter'
+import { moneyFormatter } from "~/helpers/MoneyFormatter";
 const props = defineProps({
   laborHours: {
     // Количество часов в рабочем дне
@@ -82,22 +83,19 @@ const monthlyProductionSavings = computed(() => {
   const expectedProductividadRRHH = props.expectedProductividadRRHH / 100; // Преобразуем процент в десятичную дробь
   const monthlyEnergyCost = props.monthlyEnergyCost;
   const monthlyMachineStopCost = props.monthlyMachineStopCost;
-  const percentageReductionExpectedStops =
-    props.percentageReductionExpectedStops / 100; // Преобразуем процент в десятичную дробь
+  const percentageReductionExpectedStops = props.percentageReductionExpectedStops / 100; // Преобразуем процент в десятичную дробь
   const expectedPercentageReductionEnergyCosts =
     props.expectedPercentageReductionEnergyCosts / 100; // Преобразуем процент в десятичную дробь
 
   const f1 =
-    ((laborHours * monthlyIncome) / (laborHours - dailyDowntime) -
-      monthlyIncome) *
+    ((laborHours * monthlyIncome) / (laborHours - dailyDowntime) - monthlyIncome) *
     percentageReductionExpectedStops;
   const f2 =
-    (payrollValue / workerCount) *
-    (workerCount * (1 - expectedProductividadRRHH));
+    (payrollValue / workerCount) * (workerCount * (1 - expectedProductividadRRHH));
   const f3 = expectedPercentageReductionEnergyCosts * monthlyEnergyCost;
   const f4 = monthlyMachineStopCost * 0.35;
   const result = f1 + f2 + f3 + f4;
-  return Math.round(result) || 0.00;
+  return Math.round(result) || 0.0;
 });
 
 // Первая строка расчета
@@ -109,15 +107,12 @@ const monthlyProductionCosts = computed(() => {
   const workerCount = props.workerCount;
   const percentageProductiveStaff = props.percentageProductiveStaff / 100; // Преобразуем процент в десятичную дробь
   // Первая часть выражения
-  const f1 =
-    (laborHours * monthlyIncome) / (laborHours - dailyDowntime) - monthlyIncome;
+  const f1 = (laborHours * monthlyIncome) / (laborHours - dailyDowntime) - monthlyIncome;
   const f2 =
-    (payrollValue / workerCount) *
-    (workerCount * (1 - percentageProductiveStaff));
-  const total =
-    f1 + f2 + props.monthlyEnergyCost + props.monthlyMachineStopCost;
+    (payrollValue / workerCount) * (workerCount * (1 - percentageProductiveStaff));
+  const total = f1 + f2 + props.monthlyEnergyCost + props.monthlyMachineStopCost;
 
-  return Math.round(total) || 0.00;
+  return Math.round(total) || 0.0;
 });
 watch(
   [monthlyProductionCosts, monthlyProductionSavings],
@@ -137,7 +132,9 @@ watch(
   <section class="result">
     <div class="result__inner">
       <div class="result-box">
-        <span class="subtitle">Costos productivos mensuales:</span>
+        <span class="subtitle"
+          >{{ PERFORMANCE_RESULT_LABELS.MONTHLY_PRODUCTION_COSTS.name }}:</span
+        >
         <el-input
           :formatter="(value:number | string) => moneyFormatter(value)"
           v-model="monthlyProductionCosts"
@@ -148,7 +145,9 @@ watch(
         </el-input>
       </div>
       <div class="result-box">
-        <span class="subtitle">Ahorros productivos mensuales:</span>
+        <span class="subtitle"
+          >{{ PERFORMANCE_RESULT_LABELS.MONTHLY_PRODUCTION_SAVINGS.name }}:</span
+        >
         <el-input
           :formatter="(value:number | string) =>moneyFormatter(value)"
           v-model="monthlyProductionSavings"

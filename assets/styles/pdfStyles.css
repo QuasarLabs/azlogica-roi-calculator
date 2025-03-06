@@ -206,9 +206,7 @@ body {
 .grid-container .grid-column:first-child .grid-box {
   border-right: none;
 }
-/* .grid-column .grid-box:not(:first){
-  border:1px solid red;
-} */
+
 .roi-box {
   display: flex;
   justify-content: center;
@@ -224,9 +222,7 @@ body {
 .grid-column-title {
   border: 1px solid white;
 }
-/* .grid-column:first-child{
-  border-right:1px solid red;
-} */
+
 .expected-title {
   background-color: #648bcf;
   text-align: center;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { moneyFormatter } from "~/helpers/MoneyFormatter";
-
+import { QUALITY_CONST_LABELS } from "~/constants/QualityManagementConst";
 // Пропсы с результатами из предыдущих секций
 const props = defineProps({
   defectiveProductCount: {
@@ -56,31 +56,31 @@ watch(
     <div class="result__inner">
       <!-- Ежемесячные расходы на несоответствующую продукцию -->
       <div class="result-box">
-        <span class="subtitle"> Costos de mantenimiento mensual: </span>
+        <span class="subtitle">
+          {{ QUALITY_CONST_LABELS.MONTHLY_DEFECTIVE_PRODUCT_COST.name }}:
+        </span>
         <el-input
           :formatter="(value:number | string) =>moneyFormatter(value)"
           v-model="monthlyDefectiveProductCost"
           size="large"
           readonly
         >
-        <template #prefix>
-          $
-        </template>
+          <template #prefix> $ </template>
         </el-input>
       </div>
 
       <!-- Общие расходы на обслуживание -->
       <div class="result-box">
-        <span class="subtitle"> Costos de mantenimiento: </span>
+        <span class="subtitle">
+          {{ QUALITY_CONST_LABELS.TOTAL_MAINTENANCE_COST.name }}:
+        </span>
         <el-input
           :formatter="(value:number | string) =>moneyFormatter(value)"
           v-model="totalMaintenanceCost"
           size="large"
           readonly
         >
-        <template #prefix>
-          $
-        </template>
+          <template #prefix> $ </template>
         </el-input>
       </div>
     </div>
