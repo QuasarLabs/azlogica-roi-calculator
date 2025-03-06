@@ -8,8 +8,8 @@ import fs from "fs";
 import { Buffer } from "buffer"; // Импортируем Buffer для ESM
 
 // Получаем текущую директорию
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineEventHandler(async (event) => {
   const formData = await readMultipartFormData(event);
