@@ -14,12 +14,14 @@ const __dirname = path.dirname(__filename);
 export default defineEventHandler(async (event) => {
   const formData = await readMultipartFormData(event);
   const htmlPart = formData?.find((part) => part.name === "html");
+  const emailPart = formData?.find((part) => part.name === "email");
 
-  if (!htmlPart) {
-    return { status: 400, message: "❌ Contenido HTML no encontrado" };
+  if (!htmlPart || !emailPart) {
+    return { status: 400, message: "❌ Contenido HTML o email no encontrado" };
   }
 
   const htmlContent: string = htmlPart.data.toString();
+  const userEmail: string = emailPart.data.toString();
   const filePath: string = path.join("uploads", "Azlogica ROI calculadora.pdf");
 
   try {
@@ -30,7 +32,7 @@ export default defineEventHandler(async (event) => {
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || "smtp.yandex.ru",
       port: Number(process.env.SMTP_PORT) || 465,
-      secure: process.env.SMTP_SECURE === "true",
+      secure: true, 
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASSWORD,
@@ -39,7 +41,7 @@ export default defineEventHandler(async (event) => {
 
     await transporter.sendMail({
       from: '"Mops Bullik" <mops.bullik@yandex.ru>',
-      to: "polinatcaciuc@gmail.com",
+      to: userEmail, // Используем email из формы
       subject: "📄 Azlogica ROI calculadora",
       text: "Buenos días, gracias por utilizar la calculadora de ROI de Azlogica. Puede familiarizarse con nuestros servicios y ponerse en contacto con nosotros en el sitio web: https://azlogica.com/",
       attachments: [
@@ -94,6 +96,6 @@ async function generatePDF(htmlContent: string): Promise<Buffer> {
   });
 
   await browser.close();
-  
+
   return Buffer.from(pdfBuffer);
 }

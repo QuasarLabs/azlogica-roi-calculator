@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { ValueOf } from "element-plus/es/components/table/src/table-column/defaults.mjs";
 import { STEP_TITLES } from "~/constants/StepTitles";
 import { PrintingService } from "~/services/PrintingService";
 import type ICommonData from "~/types/ICommonData";
@@ -71,12 +70,12 @@ const pdfContent = ref<string | null>(null);
 /**
  * Генерирует HTML и отправляет на сервер
  */
-const generateAndSendPDF = async () => {
+const generateAndSendPDF = async (userEmail:string) => {
   pdfContent.value = getResultHtmlMarkup() || "";
   if (!pdfContent.value) return;
 
   try {
-    await sendHTMLToBackend(pdfContent.value);
+    await sendHTMLToBackend(pdfContent.value,userEmail);
   } catch (error) {
     console.error("❌ Ошибка при отправке HTML:", error);
   }
@@ -85,9 +84,10 @@ const generateAndSendPDF = async () => {
 /**
  * Отправляет HTML на сервер
  */
-const sendHTMLToBackend = async (htmlContent: string) => {
+ const sendHTMLToBackend = async (htmlContent, userEmail:string) => {
   const formData = new FormData();
   formData.append("html", new Blob([htmlContent], { type: "text/html" }), "report.html");
+  formData.append("email", userEmail); // Append the email to the form data
 
   try {
     const response = await fetch("/api/submit", {
@@ -100,6 +100,7 @@ const sendHTMLToBackend = async (htmlContent: string) => {
     console.error("❌ Ошибка сети:", error);
   }
 };
+
 
 /**
  * Генерирует HTML-структуру отчета
