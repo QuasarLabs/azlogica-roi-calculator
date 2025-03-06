@@ -7,11 +7,8 @@ import puppeteer from "puppeteer";
 import fs from "fs";
 import { Buffer } from "buffer"; // Импортируем Buffer для ESM
 
-// Получаем текущую директорию
-// const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
 export default defineEventHandler(async (event) => {
+  // Получаем текущую директорию
   const formData = await readMultipartFormData(event);
   const htmlPart = formData?.find((part) => part.name === "html");
   const emailPart = formData?.find((part) => part.name === "email");
@@ -67,6 +64,8 @@ export default defineEventHandler(async (event) => {
 async function generatePDF(htmlContent: string): Promise<Buffer> {
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
 
   // Читаем стили из файла
   const cssPath = path.resolve(__dirname, "../../assets/styles/pdfStyles.css");
