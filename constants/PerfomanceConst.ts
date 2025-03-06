@@ -1,5 +1,7 @@
 import { COLOMBIAN_PESO } from "./shared";
 
+export const PERFOMANCE_EXPECTED_TITLE = `Resultados productivos esperados`
+
 export const PERFOMANCE_CONST = [
   {
     id:1,
@@ -73,7 +75,7 @@ export const PERFOMANCE_CONST = [
 
   {
     id:4,
-    title: "Valor de la nómina", // Сумма заработной платы
+    title: "Valor de la nómina (mensual total)", // Сумма заработной платы
     content: "el-input-number",
     model: "payrollValue",
     props: {
@@ -124,11 +126,11 @@ export const PERFOMANCE_EXPECTED_CONST = [
       size: "large",
       prefix: '%'
     },
-    description: "Plataformas de IoT de gestión de personal pueden aumentar la productividad de RRHH en un 99,99%",
+    description: "Plataformas de IoT + AI de gestión de personal pueden aumentar la productividad de RRHH en un 99,99%",
   },
   {
     id: 2,
-    title: "% de disminución de paradas esperado", // % сокращения ожидаемых остановок
+    title: "% de disminución de paradas esperadas", // % сокращения ожидаемых остановок
     content: "el-input-number",
     model: "reductionExpectedShutdowns",
     props: {
@@ -155,3 +157,8 @@ export const PERFOMANCE_EXPECTED_CONST = [
     },
   },
 ];
+
+export const PERFORMANCE_RESULT_LABELS = {
+  MONTHLY_PRODUCTION_COSTS:{name: "Costos productivos mensuales",model:'monthlyProductionCosts',prefix:COLOMBIAN_PESO},
+  MONTHLY_PRODUCTION_SAVINGS: {name:"Ahorros productivos mensuales",model:'monthlyProductionSavings',prefix:COLOMBIAN_PESO},
+};

@@ -1,4 +1,5 @@
 import { COLOMBIAN_PESO } from "./shared";
+export const QUALITY_EXPECTED_TITLE = "Resultados esperados de optimización de mantenimiento";
 
 export const QUALITY_MANAGEMENT_CONST = [
     {
@@ -42,3 +43,16 @@ export const QUALITY_EXPECTED_CONST = [
     },
   },
 ]
+
+export const QUALITY_CONST_LABELS = {
+  MONTHLY_DEFECTIVE_PRODUCT_COST: {
+    name: "Costos de mantenimiento mensual",
+    model: "monthlyDefectiveProductCost",
+    prefix:COLOMBIAN_PESO
+  },
+  TOTAL_MAINTENANCE_COST: {
+    name: "Costos de mantenimiento",
+    model: "totalMaintenanceCost",
+    prefix:COLOMBIAN_PESO
+  },
+}

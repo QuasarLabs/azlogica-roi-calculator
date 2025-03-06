@@ -1,5 +1,7 @@
 import { COLOMBIAN_PESO } from "./shared";
 
+export const FUEL_EXPECTED_TITLE = `Resultados productivos esperados`
+
 export const FUEL_CONST = [
   {
     id: 1,
@@ -15,7 +17,7 @@ export const FUEL_CONST = [
   },
   {
     id: 3,
-    title: "Distancia recorrida en rutas",
+    title: "Distancia recorrida en mensual en km",
     desc: "Distancia recorrida por las rutas",
     content: "el-input-number",
     model: "routeDistance",
@@ -90,3 +92,11 @@ export const FUEL_EXPECTED_CONST = [
     },
   },
 ];
+
+
+export const FUEL_RESULT_LABELS = {
+  MONTHLY_FUEL_COST: { name: "Costos de combustible mensual", model: "fuelCost",    prefix:COLOMBIAN_PESO
+  },
+  TOTAL_FUEL_SAVINGS: { name: "Ahorro total de combustible", model: "fuelSavings",    prefix:COLOMBIAN_PESO
+  },
+};

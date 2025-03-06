@@ -1,5 +1,5 @@
 import { COLOMBIAN_PESO } from "./shared";
-
+export const MAINTENANCE_EXPECTED_TITLE = `Resultados productivos esperados`
 export const MAINTENANCE_CONST = [
   {
     id: 1,
@@ -31,3 +31,18 @@ export const MAINTENANCE_EXPECTED_CONST = [
     },
   },
 ];
+
+
+export const MAINTENANCE_RESULT_LABELS = {
+  MONTHLY_MAINTENANCE_COSTS: {
+    name: "Costos de mantenimiento mensual",
+    model: "monthlyMaintenanceCosts",
+    prefix:COLOMBIAN_PESO
+
+  },
+  SAVINGS_ON_MAINTENANCE: {
+    name: "Ahorro en mantenimiento",
+    model: "savingsOnMaintenance",
+    prefix:COLOMBIAN_PESO
+  },
+};

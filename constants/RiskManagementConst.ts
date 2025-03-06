@@ -1,5 +1,7 @@
 import { COLOMBIAN_PESO } from "./shared";
 
+export const RISK_MANAGEMENT_EXPECTED_TITLE = `Resultados esperados de gestión del riesgo`
+
 export const RISK_MANAGEMENT_CONST = [
     {
       id: 1,
@@ -21,11 +23,11 @@ export const RISK_MANAGEMENT_CONST = [
         size: "large",
         prefix: COLOMBIAN_PESO
       },
-      description: "Costo de los accidentes",
+      description: "Costo de los accidentes por mes",
     },
     {
       id: 2,
-      title: "Valor de los activos", // стоимость активов
+      title: "Valor de los activos hurtados por mes", // стоимость активов
       model: "assetValue",
       content: 'el-input-number',
       props: {
@@ -46,6 +48,16 @@ export const RISK_MANAGEMENT_CONST = [
          prefix: COLOMBIAN_PESO
       },
       description: "Valor de la prima de seguros anual",
+    },
+    {
+      id: 4,
+      title: "Descripción de accidentes",
+      model: "descriptionAccident",
+      content: 'el-input',
+      props: {
+        size: "large",
+      },
+      description: "Describe los accidentes ocurridos",
     },
 ];
 
@@ -99,3 +111,8 @@ export const RISK_MANAGEMENT_EXPECTED_CONST = [
   },
 
 ]
+
+export const RISK_MANAGEMENT_RESULT_LABELS = {
+  MONTHLY_RISK_COSTS: { name: "Costos de riesgos mensuales", model: "monthlyRiskCosts",prefix:COLOMBIAN_PESO },
+  MONTHLY_RISK_SAVINGS: { name: "Ahorros de riesgos mensuales", model: "monthlyRiskSavings",prefix:COLOMBIAN_PESO },
+};

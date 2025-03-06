@@ -1,5 +1,8 @@
 import { COLOMBIAN_PESO } from "./shared";
 
+
+export const INVENTORY_EXPECTED_TITLE = `Resultados productivos esperados`
+
 export const INVENTORY_MANAGEMENT_CONST = [
     {
       id: 1,
@@ -98,3 +101,11 @@ export const INVENTORY_EXPECTED_CONST = [
         },
       },
 ]
+
+
+export const INVENTORY_LABELS = {
+  MONTHLY_INVENTORY_COST: { name: "Costos de inventarios mensual", model: "monthlyInventoryCost",    prefix:COLOMBIAN_PESO
+  },
+  MONTHLY_INVENTORY_SAVINGS: { name: "Ahorro de inventarios mensual", model: "monthlyInventorySavings",    prefix:COLOMBIAN_PESO
+  },
+};
