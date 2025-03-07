@@ -2,7 +2,7 @@
 import { STEP_TITLES } from "../constants/StepTitles";
 import { TYPES_ASSETS } from "../constants/TypesAssets";
 import { RESULT_LABELS } from "~/constants/ResultConst";
-import logoPng from '../public/logo.png'
+import logoPng from '../assets/logo.png'
 
 import {
   ASSET_TYPE_QUESTIONS,
@@ -75,7 +75,7 @@ export class PrintingService {
     box.classList.add('logo-box')
     const img = document.createElement("img");
     img.classList.add('logo')
-    img.src = logoPng; // Путь к файлу в корне проекта
+    img.src = new URL('../assets/logo.png', import.meta.url).href;
     img.alt = "Company Logo";
     img.classList.add("logo"); // Добавляем CSS-класс (если нужно)
     box.appendChild(img)

@@ -1,8 +1,7 @@
 <script lang="ts" setup></script>
-
 <template>
   <NuxtLink class="logo-link" to="/">
-    <img src="/public/logo.png" alt="azlogica logo" />
+    <img src="../../assets/logo.png" alt="azlogica logo" />
   </NuxtLink>
 </template>
 
