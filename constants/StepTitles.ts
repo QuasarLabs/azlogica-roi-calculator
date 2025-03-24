@@ -25,7 +25,7 @@ export const STEP_TITLES = [
     },
     {
         id:7,
-        name:'Gestion de calidad',
+        name:'Gestión de calidad',
     },
 
 ]

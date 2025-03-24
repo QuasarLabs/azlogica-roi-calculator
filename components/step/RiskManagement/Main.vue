@@ -45,7 +45,6 @@ watch(
           :is="UI_ELEMENTS[item.content]"
           v-model="riskManagementData[item.model as keyof IRiskManagement]"
           v-bind="item.props"
-          placeholder="Ingrese el valor"
           @change="change"
         >
         <template #prefix v-if="item.props.prefix">

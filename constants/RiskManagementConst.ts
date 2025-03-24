@@ -56,6 +56,7 @@ export const RISK_MANAGEMENT_CONST = [
       content: 'el-input',
       props: {
         size: "large",
+        placeholder: "Escriba una descripción"
       },
       description: "Describe los accidentes ocurridos",
     },
@@ -77,7 +78,7 @@ export const RISK_MANAGEMENT_EXPECTED_CONST = [
       size: "large",
       prefix:'%'
     },
-    description: "Compañías que usan programas de calificacion de desempeño de conductores",
+    description: "Compañías que usan programas de calificación de desempeño de conductores (hasta 50% de mejora estimada)",
   },
   {
     id: 3,

@@ -6,7 +6,7 @@ export const FUEL_CONST = [
   {
     id: 1,
     title: "Economía de combustible",
-    desc: "Ahorro de combustible (en km por galón)",
+    desc: "Rendimiento de combustible (en km por galón)",
     content: "el-input-number",
     model: "fuelEconomy",
     props: {

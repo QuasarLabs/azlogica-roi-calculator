@@ -6,7 +6,7 @@ export const INVENTORY_EXPECTED_TITLE = `Resultados productivos esperados`
 export const INVENTORY_MANAGEMENT_CONST = [
     {
       id: 1,
-      title: "Demanda mensual de producto", // Ежемесячная потребность в продукции
+      title: "Demanda mensual en el producto", // Ежемесячная потребность в продукции
       desc:'Demanda promedio de productos por mes',
       content: "el-input-number",
       model: "monthlyDemand",

@@ -46,12 +46,12 @@ export const QUALITY_EXPECTED_CONST = [
 
 export const QUALITY_CONST_LABELS = {
   MONTHLY_DEFECTIVE_PRODUCT_COST: {
-    name: "Costos de mantenimiento mensual",
+    name: "Costos de gestion de calidad mensual",
     model: "monthlyDefectiveProductCost",
     prefix:COLOMBIAN_PESO
   },
   TOTAL_MAINTENANCE_COST: {
-    name: "Costos de mantenimiento",
+    name: "Costos de gestion de calidad",
     model: "totalMaintenanceCost",
     prefix:COLOMBIAN_PESO
   },
