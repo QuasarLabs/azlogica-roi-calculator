@@ -4,7 +4,10 @@
   <header class="header">
     <div class="container">
       <div class="header__inner">
-       <h1 class="title_large">Calculadora de ROI para proyectos de IoT + AI</h1> 
+        <BaseLogo />
+        <h1 class="title_large">
+          Calculadora de ROI para proyectos de IoT + AI
+        </h1>
       </div>
     </div>
   </header>
@@ -16,9 +19,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
   }
-  h1{
-    text-align: center
+  h1 {
+    text-align: center;
   }
 }
 </style>
