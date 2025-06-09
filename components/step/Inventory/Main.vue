@@ -2,33 +2,48 @@
 import type { IInventoryManagement } from "~/types/inventoryManagement";
 import { UI_ELEMENTS } from "~/constants/uiElements";
 import { INVENTORY_MANAGEMENT_CONST } from "~/constants/InventoryManagement";
-// Реактивные данные для хранения ответов
+
+const emit = defineEmits(["update"]);
+
+// 🛡 Утилита безопасного числа
+function safeNumber(value: any): number {
+  const num = Number(value);
+  return !isFinite(num) || isNaN(num) ? 0 : num;
+}
+
+// 📦 Реактивные значения
 const values: IInventoryManagement = reactive({
   monthlyDemand: 0,
   averageCost: 0,
   averageOrderSize: 0,
   productMaintenanceCost: 0,
-  quantityOrderedProducts:0,
+  quantityOrderedProducts: 0,
 });
 
-// Создание события для отправки данных
-const emit = defineEmits(["update"]);
+// ✅ Обработка изменений
 function change() {
-  emit("update", "inventoryManagement", values);
+  // Применим safeNumber ко всем значениям перед эмитом
+  for (const key in values) {
+    values[key as keyof IInventoryManagement] = safeNumber(values[key as keyof IInventoryManagement]);
+  }
+  emit("update", "inventoryManagement", { ...values });
 }
 
+// ✅ Отслеживание изменений (включая при инициализации)
 watch(
   () => values,
   (newValues) => {
-    emit("update", "inventoryManagement", newValues); 
+    for (const key in newValues) {
+      newValues[key as keyof IInventoryManagement] = safeNumber(newValues[key as keyof IInventoryManagement]);
+    }
+    emit("update", "inventoryManagement", { ...newValues });
   },
   {
     immediate: true,
-    deep: true, 
-    once:true,
+    deep: true,
+    once: true,
   }
 );
-
 </script>
 
 <template>
@@ -51,14 +66,15 @@ watch(
           :placeholder="item.props.placeholder"
           @change="change"
         >
-        <template #prefix v-if="item.props.prefix">
-         {{item.props.prefix}}
-        </template>
+          <template #prefix v-if="item.props.prefix">
+            {{ item.props.prefix }}
+          </template>
         </component>
       </li>
     </ol>
   </section>
 </template>
+
 
 <style lang="scss" scoped>
 .inventory {

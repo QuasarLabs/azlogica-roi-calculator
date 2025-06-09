@@ -3,76 +3,57 @@ const emit = defineEmits(["updateResultData"]);
 import { moneyFormatter } from "~/helpers/MoneyFormatter";
 import { INVENTORY_LABELS } from "~/constants/InventoryManagement";
 
-// Пропсы с результатами из предыдущих секций
+// 🔐 Утилита для безопасных расчётов
+function safeNumber(value: number): number {
+  return !isFinite(value) || isNaN(value) ? 0 : Math.round(value);
+}
+
+// Пропсы
 const props = defineProps({
-  // Ежемесячная потребность в продукции
-  // Demanda mensual de producto
-  monthlyDemand: {
-    type: Number,
-    default: 0,
-  },
-  // Стоимость продукции
-  // Costo de producto
-  averageCost: {
-    type: Number,
-    default: 0,
-  },
-  // Стоимость размещения заказа у поставщика
-  // Costo de pedir producto
-  quantityOrderedProducts: {
-    type: Number,
-    default: 0,
-  },
-  // Количество заказываемой продукции
-  // Tamaño de la orden pedida
-  averageOrderSize: {
-    type: Number,
-    default: 0,
-  },
-  // Стоимость обслуживания продукта
-  // Costo de mantenimiento de producto
-  productMaintenanceCost: {
-    type: Number,
-    default: 0,
-  },
-  //Точность прогноза
-  // Precisión de pronósticos
-  forecastAccuracy: {
-    type: Number,
-    default: 0,
-  },
-  //  % уменьшения товара на складе
-  warehouseReduction: {
-    type: Number,
-    default: 0,
-  },
+  monthlyDemand: { type: Number, default: 0 },
+  averageCost: { type: Number, default: 0 },
+  quantityOrderedProducts: { type: Number, default: 0 },
+  averageOrderSize: { type: Number, default: 0 },
+  productMaintenanceCost: { type: Number, default: 0 },
+  forecastAccuracy: { type: Number, default: 0 }, // %
+  warehouseReduction: { type: Number, default: 0 }, // %
 });
 
-// Вычисление ежемесячных затрат на запасы
+// 💰 Расчёт затрат на запасы
 const monthlyInventoryCost = computed(() => {
   const f1 = props.monthlyDemand * props.averageCost;
   const f2 = (props.averageOrderSize / 2) * props.productMaintenanceCost;
+
   const f3 =
-    (props.monthlyDemand / props.averageOrderSize) * props.quantityOrderedProducts;
-  return Math.round(f1 + f2 + f3) || 0.0;
+    props.averageOrderSize > 0
+      ? (props.monthlyDemand / props.averageOrderSize) * props.quantityOrderedProducts
+      : 0;
+
+  return safeNumber(f1 + f2 + f3);
 });
 
-// Вычисление ежемесячной производительной экономии
+// 💸 Расчёт экономии
 const monthlyInventorySavings = computed(() => {
-  const percentageforecastAccuracy = props.forecastAccuracy / 100; // Преобразуем процент в десятичную дробь
-  const percentageWarehouseReduction = props.warehouseReduction / 100;
+  const forecastAccuracy = props.forecastAccuracy / 100;
+  const warehouseReduction = props.warehouseReduction / 100;
+
   const f1 =
-    monthlyInventoryCost.value / 2 -
+    (monthlyInventoryCost.value / 2) -
     (props.averageOrderSize / 2) *
       props.productMaintenanceCost *
-      percentageWarehouseReduction;
+      warehouseReduction;
+
   const f2 =
-    (props.monthlyDemand / props.averageOrderSize) *
-    props.quantityOrderedProducts *
-    percentageforecastAccuracy;
-  return Math.round(f1 + f2) || 0.0;
+    props.averageOrderSize > 0
+      ? (props.monthlyDemand / props.averageOrderSize) *
+        props.quantityOrderedProducts *
+        forecastAccuracy
+      : 0;
+
+  return safeNumber(f1 + f2);
 });
 
+// 🚀 Обновляем родителя
 watch(
   [monthlyInventoryCost, monthlyInventorySavings],
   ([newResult1, newResult2]) => {
@@ -81,9 +62,7 @@ watch(
       monthlyInventorySavings: newResult2,
     });
   },
-  {
-    immediate: true,
-  }
+  { immediate: true }
 );
 </script>
 
@@ -93,27 +72,20 @@ watch(
       <div class="result-box">
         <span class="subtitle">{{ INVENTORY_LABELS.MONTHLY_INVENTORY_COST.name }}:</span>
         <el-input
-          v-model="monthlyInventoryCost"
-          :formatter="(value:number | string) =>moneyFormatter(value)"
-          :min="0"
-          :max="100"
-          :step="1"
+          :model-value="monthlyInventoryCost"
+          :formatter="(value: number | string) => moneyFormatter(value)"
           size="large"
           readonly
         >
           <template #prefix> $ </template>
         </el-input>
       </div>
+
       <div class="result-box">
-        <span class="subtitle"
-          >{{ INVENTORY_LABELS.MONTHLY_INVENTORY_SAVINGS.name }}:</span
-        >
+        <span class="subtitle">{{ INVENTORY_LABELS.MONTHLY_INVENTORY_SAVINGS.name }}:</span>
         <el-input
-          v-model="monthlyInventorySavings"
-          :formatter="(value:number | string) =>moneyFormatter(value)"
-          :min="0"
-          :max="100"
-          :step="1"
+          :model-value="monthlyInventorySavings"
+          :formatter="(value: number | string) => moneyFormatter(value)"
           size="large"
           readonly
         >

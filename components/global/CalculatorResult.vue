@@ -2,7 +2,7 @@
 import { moneyFormatter } from "~/helpers/MoneyFormatter";
 import { RESULT_LABELS } from "~/constants/ResultConst";
 
-// Пропсы для входных данных
+// Пропсы
 const props = defineProps({
   assetsToControl: { type: Number, default: 0 },
   monthlyProductivitySavings: { type: [String, Number], default: 0 },
@@ -13,35 +13,51 @@ const props = defineProps({
   maintenanceCosts: { type: [String, Number], default: 0 },
 });
 
-// ✅ Создаем событие для передачи данных в родительский компонент
+// Эвент
 const emit = defineEmits(["updateGlobalResultData"]);
 
-// Вычисления
+// Ввод стоимости системы
 const systemCost = ref(0);
-const totalMonthlySavings = computed(
-  () =>
+
+// Утилита защиты
+function safeNumber(value: number): number {
+  return !isFinite(value) || isNaN(value) ? 0 : value;
+}
+
+// Вычисления
+const totalMonthlySavings = computed(() =>
+  safeNumber(
     +props.monthlyProductivitySavings +
       +props.monthlyRiskSavings +
       +props.monthlyInventorySavings +
       +props.totalFuelSavings +
       +props.maintenanceSavings +
-      +props.maintenanceCosts || 0.0
+      +props.maintenanceCosts
+  )
 );
-const netMonthlySavings = computed(() => +totalMonthlySavings.value - +systemCost.value);
-const totalAnnualSavings = computed(() => +totalMonthlySavings.value * 12);
-const annualSystemCost = computed(() => +systemCost.value * 12);
-const netAnnualSavings = computed(
-  () => totalAnnualSavings.value - annualSystemCost.value
+
+const netMonthlySavings = computed(() =>
+  safeNumber(+totalMonthlySavings.value - +systemCost.value)
+);
+
+const totalAnnualSavings = computed(() =>
+  safeNumber(+totalMonthlySavings.value * 12)
+);
+
+const annualSystemCost = computed(() =>
+  safeNumber(+systemCost.value * 12)
+);
+
+const netAnnualSavings = computed(() =>
+  safeNumber(+totalAnnualSavings.value - +annualSystemCost.value)
 );
 
 const roi = computed(() => {
-  const result =
-    (+totalAnnualSavings.value - +annualSystemCost.value) / +annualSystemCost.value;
-
-  return isNaN(result) ? 0 : result.toFixed(2);
+  const result = (+totalAnnualSavings.value - +annualSystemCost.value) / +annualSystemCost.value;
+  return safeNumber(+result.toFixed(2));
 });
 
-// ✅ `watch` автоматически отправляет данные в `updateGlobalResultData`
+// Обновление родителя
 watch(
   () => ({
     totalMonthlySavings: totalMonthlySavings.value,
@@ -70,7 +86,11 @@ watch(
         <ul class="calculator-result__list">
           <li class="calculator-result__item">
             <span class="subtitle">{{ RESULT_LABELS.totalMonthlySavings.name }}</span>
-            <el-input :formatter="(value:number | string) =>moneyFormatter(value)" v-model="totalMonthlySavings" readonly>
+            <el-input
+              :formatter="(value: number | string) => moneyFormatter(value)"
+              :model-value="totalMonthlySavings"
+              readonly
+            >
               <template #prefix> $ </template>
             </el-input>
           </li>
@@ -82,7 +102,11 @@ watch(
           </li>
           <li class="calculator-result__item">
             <span class="subtitle">{{ RESULT_LABELS.netMonthlySavings.name }}</span>
-            <el-input v-model="netMonthlySavings" readonly>
+            <el-input
+              :model-value="netMonthlySavings"
+              :formatter="(value: number | string) => moneyFormatter(value)"
+              readonly
+            >
               <template #prefix> $ </template>
             </el-input>
           </li>
@@ -94,19 +118,31 @@ watch(
         <ul class="calculator-result__list calculator-result__list_ahorro-anual">
           <li class="calculator-result__item">
             <span class="subtitle">{{ RESULT_LABELS.totalAnnualSavings.name }}</span>
-            <el-input :formatter="(value:number | string) =>moneyFormatter(value)" v-model="totalAnnualSavings" readonly>
+            <el-input
+              :formatter="(value: number | string) => moneyFormatter(value)"
+              :model-value="totalAnnualSavings"
+              readonly
+            >
               <template #prefix> $ </template>
             </el-input>
           </li>
           <li class="calculator-result__item">
             <span class="subtitle">{{ RESULT_LABELS.annualSystemCost.name }}</span>
-            <el-input :formatter="(value:number | string) =>moneyFormatter(value)" v-model="annualSystemCost" readonly>
+            <el-input
+              :formatter="(value: number | string) => moneyFormatter(value)"
+              :model-value="annualSystemCost"
+              readonly
+            >
               <template #prefix> $ </template>
             </el-input>
           </li>
           <li class="calculator-result__item">
             <span class="subtitle">{{ RESULT_LABELS.netAnnualSavings.name }}</span>
-            <el-input :formatter="(value:number | string) =>moneyFormatter(value)" v-model="netAnnualSavings" readonly>
+            <el-input
+              :formatter="(value: number | string) => moneyFormatter(value)"
+              :model-value="netAnnualSavings"
+              readonly
+            >
               <template #prefix> $ </template>
             </el-input>
           </li>
@@ -116,7 +152,7 @@ watch(
 
     <div class="calculator-result__roi title_large">
       <h3>{{ RESULT_LABELS.roi.name }} =</h3>
-      <p class="value">{{ +roi < 0 || !roi || isNaN(+roi) ? 0 : roi }}%</p>
+      <p class="value">{{ roi }} x</p>
     </div>
   </section>
 </template>

@@ -50,7 +50,6 @@ export default defineEventHandler(async (event) => {
       ],
     });
 
-    console.log("✅ Correo con PDF enviado correctamente!");
     await unlink(filePath);
 
     return { status: 200, message: "✅ Archivo cargado y correo enviado exitosamente" };
@@ -82,8 +81,6 @@ async function generatePDF(htmlContent: string): Promise<Buffer> {
       </body>
     </html>
   `;
-
-  console.log("🔹 HTML con estilos aplicado:", styledHtml);
 
   await page.setContent(styledHtml, { waitUntil: "networkidle0" });
 

@@ -3,25 +3,45 @@ import { INVENTORY_EXPECTED_CONST } from "~/constants/InventoryManagement";
 import { UI_ELEMENTS } from "~/constants/uiElements";
 import type { IInventoryManagementExpectedResults } from "~/types/inventoryManagement";
 
-const values:IInventoryManagementExpectedResults = reactive({
-  warehouseReduction: 0, // % уменьшения товара на складе
-  forecastAccuracy: 0, // % точности прогноза
-});
-
 const emit = defineEmits(["update"]);
-function change() {
-  emit("update", "inventoryManagement", values);
+
+// ✅ Безопасный парсер
+function safeNumber(value: any): number {
+  const num = Number(value);
+  return !isFinite(num) || isNaN(num) ? 0 : num;
 }
 
+// 📦 Инициализация реактивного объекта
+const values: IInventoryManagementExpectedResults = reactive({
+  warehouseReduction: 0,
+  forecastAccuracy: 0,
+});
+
+// ✅ Обновление данных вручную при изменении одного поля
+function change() {
+  for (const key in values) {
+    values[key as keyof IInventoryManagementExpectedResults] = safeNumber(
+      values[key as keyof IInventoryManagementExpectedResults]
+    );
+  }
+  emit("update", "inventoryManagement", { ...values });
+}
+
+// ✅ Наблюдатель с безопасной трансформацией данных
 watch(
   () => values,
   (newValues) => {
-    emit("update", "inventoryManagement", newValues); 
+    for (const key in newValues) {
+      newValues[key as keyof IInventoryManagementExpectedResults] = safeNumber(
+        newValues[key as keyof IInventoryManagementExpectedResults]
+      );
+    }
+    emit("update", "inventoryManagement", { ...newValues });
   },
   {
     immediate: true,
-    deep: true, 
-    once:true,
+    deep: true,
+    once: true,
   }
 );
 </script>
@@ -32,7 +52,6 @@ watch(
       <span class="subtitle">Resultados productivos esperados</span>
     </div>
     <ol class="expected-results__list">
-      <!-- % reducción esperada del tiempo de inactividad -->
       <li
         v-for="item in INVENTORY_EXPECTED_CONST"
         :key="item.id"
@@ -48,14 +67,15 @@ watch(
           v-bind="item.props"
           @change="change"
         >
-        <template #prefix v-if="item.props.prefix">
-         {{item.props.prefix}}
-        </template>
+          <template #prefix v-if="item.props.prefix">
+            {{ item.props.prefix }}
+          </template>
         </component>
       </li>
     </ol>
   </section>
 </template>
+
 
 <style scoped lang="scss">
 .inventory-control {

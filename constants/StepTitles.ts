@@ -9,7 +9,7 @@ export const STEP_TITLES = [
     },
     {
         id:3,
-        name:'Gestión del riegos',
+        name:'Gestión del riesgos',
     },
     {
         id:4,

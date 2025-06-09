@@ -7,6 +7,6 @@ export const RESULT_LABELS = {
     totalAnnualSavings: { name: "Ahorros totales anuales", model: "totalAnnualSavings",prefix:COLOMBIAN_PESO },
     annualSystemCost: { name: "Costo anual del sistema", model: "annualSystemCost",prefix:COLOMBIAN_PESO },
     netAnnualSavings: { name: "Ahorro neto anual", model: "netAnnualSavings",prefix:COLOMBIAN_PESO },
-    roi: { name: "ROI", model: "roi" },
+    roi: { name: "Tasa de Retorno", model: "roi" },
   };
   

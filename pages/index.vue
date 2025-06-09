@@ -95,7 +95,6 @@ const generateAndSendPDF = async (userEmail:string) => {
       body: formData,
     });
     const result = await response.json();
-    console.log("📨 Ответ сервера:", result);
   } catch (error) {
     console.error("❌ Ошибка сети:", error);
   }

@@ -3,6 +3,7 @@ import { STEP_TITLES } from "../constants/StepTitles";
 import { TYPES_ASSETS } from "../constants/TypesAssets";
 import { RESULT_LABELS } from "~/constants/ResultConst";
 import logoPng from '../assets/logo.png'
+import { moneyFormatter } from "~/helpers/MoneyFormatter"; 
 
 import {
   ASSET_TYPE_QUESTIONS,
@@ -144,15 +145,14 @@ export class PrintingService {
       gridContainer.append(createColumn("Ahorro anual", secondColumnData));
       // ✅ Добавляем ROI в самый низ
       const roiBox = document.createElement("h1");
-      roiBox.classList.add("title", "title_large","roi-box");
+      roiBox.classList.add("title", "title_large", "roi-box");
 
       const roiQuestion = document.createElement("div");
-      roiQuestion.textContent = "ROI=";
+      roiQuestion.innerHTML = "Tasa de Retorno =&nbsp;";
       
       const roiValue = document.createElement("div");
       const roi = this.data.finalResults?.roi;
-      roiValue.textContent = roi != null ? `${roi}%` : "No especificado";
-      
+      roiValue.textContent = roi != null ? ` ${roi} x` : "No especificado";
       roiBox.append(roiQuestion, roiValue);
       gridContainer.append(roiBox); 
       return gridContainer;
@@ -178,7 +178,6 @@ export class PrintingService {
       box.append(question, answer);
       gridContainer.append(box);
     });
-    console.log(gridContainer);
     return gridContainer;
   }
   getExpectedTitle(expectedTitle:string){
@@ -189,39 +188,59 @@ export class PrintingService {
     return title;
 
   }
-  mapTableData(mainArray, expectedArray, expectedTitle, dataField) {
-    let tableData = [];
+mapTableData(mainArray, expectedArray, expectedTitle, dataField) {
+  let tableData = [];
+
+  // 🔹 Основной блок
+  tableData.push(
+    ...mainArray.map((item) => {
+      let rawValue = this.data[dataField]?.[item.model];
+
+      // Проверка на отсутствие значения
+      if (rawValue == null || rawValue === "") {
+        return { q: item.title, a: "No especificado" };
+      }
+
+      const isNumber = typeof rawValue === "number" || !isNaN(Number(rawValue));
+      let value = isNumber ? moneyFormatter(rawValue) : rawValue;
+
+      // Добавляем префикс
+      if (item.props?.prefix) {
+        value = `${item.props.prefix} ${value}`;
+      }
+
+      return { q: item.title, a: value };
+    })
+  );
+
+  // 🔹 Блок ожидаемых значений
+  if (expectedArray.length > 0) {
+    if (expectedTitle) {
+      tableData.push({ q: expectedTitle, isExpectedTitle: true });
+    }
 
     tableData.push(
-      ...mainArray.map((item) => {
-        let value = this.data[dataField]?.[item.model] ?? "No especificado";
-        debugger
-        if (item.props?.prefix && value !== "No especificado") {
+      ...expectedArray.map((item) => {
+        let rawValue = this.data[dataField]?.[item.model];
+
+        if (rawValue == null || rawValue === "") {
+          return { q: item.title, a: "No especificado" };
+        }
+
+        const isNumber = typeof rawValue === "number" || !isNaN(Number(rawValue));
+        let value = isNumber ? moneyFormatter(rawValue) : rawValue;
+
+        if (item.props?.prefix) {
           value = `${item.props.prefix} ${value}`;
         }
+
         return { q: item.title, a: value };
       })
     );
-
-    if (expectedArray.length > 0) {
-      if(expectedTitle){
-       debugger
-       tableData.push({q: expectedTitle,isExpectedTitle:true});
-      }
-      // tableData.push({ q: expectedTitle, isExpectedTitle : true }); // 🔥 Добавляем заголовок `expectedTitle` в `div`
-      tableData.push(
-        ...expectedArray.map((item) => {
-          let value = this.data[dataField]?.[item.model] ?? "No especificado";
-          if (item.props?.prefix && value !== "No especificado") {
-            value = `${item.props.prefix} ${value}`;
-          }
-          return { q: item.title, a: value };
-        })
-      );
-    }
-
-    return tableData;
   }
+
+  return tableData;
+}
   getAssetsTableData() {
     const tableData = [
       {
@@ -303,15 +322,24 @@ export class PrintingService {
   }
     /** 🔥 Метод для генерации итоговой секции */
   getFinalResultsData() {
-    return Object.values(RESULT_LABELS).map((item) => {
-      let value = this.data.finalResults?.[item.model] ?? "No especificado";
+  return Object.values(RESULT_LABELS).map((item) => {
+    let rawValue = this.data.finalResults?.[item.model];
 
-      // ✅ Добавляем префикс, если он есть
-      if (item.prefix && value !== "No especificado") {
-        value = `${item.prefix} ${value}`;
-      }
+    // Если значение отсутствует — вернуть "No especificado"
+    if (rawValue == null || rawValue === "") {
+      return { q: item.name, a: "No especificado" };
+    }
 
-      return { q: item.name, a: value };
-    });
+    // Определяем, нужно ли форматировать как число
+    const isNumber = typeof rawValue === "number" || !isNaN(Number(rawValue));
+    let value = isNumber ? moneyFormatter(rawValue) : rawValue;
+
+    // Добавляем префикс (например, "$")
+    if (item.prefix) {
+      value = `${item.prefix} ${value}`;
+    }
+
+    return { q: item.name, a: value };
+  });
   }
 }
